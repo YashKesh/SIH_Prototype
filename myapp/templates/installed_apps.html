@@ -1,0 +1,90 @@
+{% extends 'main.html' %} 
+{% block content %}
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+    <title>Installed Applications</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 0;
+      }
+
+      h1 {
+        text-align: center;
+        padding: 20px;
+        background-color: #91c8e4;
+        color: #fff;
+        margin: 0;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+        background-color: #fff;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 0px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+        border-radius: 5px;
+      }
+
+      th {
+        background-color: #91c8e4;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      tr:hover {
+        background-color: #ddd;
+      }
+
+      @media (max-width: 600px) {
+        table {
+          width: 100%;
+        }
+        th,
+        td {
+          padding: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Installed Applications</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>App Name</th>
+          <th>Publisher</th>
+          <th>Installed On</th>
+          <th>Installed Version</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for app in installed_apps %}
+        <tr>
+          <td>{{ app.0 }}</td>
+          <td>{{ app.1 }}</td>
+          <td>{{ app.2 }}</td>
+          <td>{{ app.3 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
+{% endblock content %}

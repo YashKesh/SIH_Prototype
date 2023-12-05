@@ -1,0 +1,14 @@
+{% extends 'main.html' %} {% block content %}
+<main>
+  <div>
+    <h1>Dashboard</h1>
+    <ul>
+      <li>CPU USAGE:{{ data.cpu_usage }}</li>
+      <li>RAM USAGE:{{ data.ram_usage }}</li>
+      <li>Disk usage:{{ data.disk_usage }}</li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+</main>
+{% endblock content %}

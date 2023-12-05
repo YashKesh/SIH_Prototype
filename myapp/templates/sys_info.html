@@ -1,0 +1,35 @@
+{% extends 'main.html' %} {% block content %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Combined System Information</title>
+    {% load static %}
+
+    <!-- <link rel="stylesheet" href="{% static 'try.css'%}" /> -->
+
+    <script type="text/javascript">
+      function autoRefreshPage() {
+        window.location.reload();
+      }
+
+      setInterval(autoRefreshPage, 60000);
+    </script>
+  </head>
+  <body>
+    <h1 class="ok">Combined System Information</h1>
+    <p>Hostname: {{ data.hostname }}</p>
+    <p>Product Name: {{ data.product_name }}</p>
+    <p>MAC Address: {{ data.mac_address }}</p>
+    <p>IP Address: {{ data.ip_address }}</p>
+    <p>CPU Type: {{ data.cpu_type }}</p>
+    <p>CPU Speed: {{ data.cpu_speed }}</p>
+    <p>Windows Build Number: {{ data.build_number }}</p>
+    <p>Serial Number: {{ data.serial_number }}</p>
+    <p>Product ID: {{ data.product_id }}</p>
+    <p>CPU Usage: {{ data.cpu_usage }}%</p>
+    <p>RAM Usage: {{ data.ram_usage }}%</p>
+    <p>Disk Usage: {{ data.disk_usage }}</p>
+    <p>Current Time: {{ data.current_Time }}</p>
+  </body>
+</html>
+{% endblock content %}
