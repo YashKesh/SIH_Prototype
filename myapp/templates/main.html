@@ -6,9 +6,13 @@
     <title>Document</title>
 </head>
 <body>
-    {% include 'sidebar.html' %}
-    {% block content %}
-    {% endblock content %}
+    {% extends 'sidebar.html' %}
+  
+    <div class="main-panel">
+        {% block content %}
+        {% endblock content %}
+    </div>
+    
     
 </body>
 </html>

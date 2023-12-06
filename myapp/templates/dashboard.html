@@ -1,14 +1,68 @@
-{% extends 'main.html' %} {% block content %}
-<main>
-  <div>
-    <h1>Dashboard</h1>
-    <ul>
-      <li>CPU USAGE:{{ data.cpu_usage }}</li>
-      <li>RAM USAGE:{{ data.ram_usage }}</li>
-      <li>Disk usage:{{ data.disk_usage }}</li>
-      <li></li>
-      <li></li>
-    </ul>
+{% extends 'main.html' %} 
+{% block content %}
+<style>
+  /* Custom CSS for the card */
+  .custom-card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      margin-bottom: 20px;
+  }
+
+  .custom-card .card-body {
+      padding: 20px;
+  }
+
+  .custom-card .card-people {
+      background-color: #343a40;
+      color: #fff;
+      padding: 20px;
+      border-radius: 0 0 10px 10px;
+  }
+
+  .custom-card h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+  }
+
+  .custom-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+  }
+
+  .custom-card ul li {
+      margin-bottom: 10px;
+  }
+
+  /* Space between cards */
+  .custom-card + .custom-card {
+      margin-top: 20px;
+  }
+</style>
+<div class="container">
+  <div class="row">
+      <div class="col-md-6 grid-margin stretch-card">
+          <div class="card custom-card mg">
+              <div class="card-body card tale-bg">
+                  <div class="card-people mt-auto">
+                      <h1>Dashboard</h1>
+                      <ul>
+                          <li>CPU USAGE: {{ data.cpu_usage }}</li>
+                          <li>RAM USAGE: {{ data.ram_usage }}</li>
+                          <li>Disk usage: {{ data.disk_usage }}</li>
+                          <li></li>
+                          <li></li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+      </div>
   </div>
-</main>
+</div>
+
+
+    
+  
 {% endblock content %}
