@@ -1,35 +1,70 @@
-{% extends 'main.html' %} {% block content %}
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Combined System Information</title>
-    {% load static %}
 
-    <!-- <link rel="stylesheet" href="{% static 'try.css'%}" /> -->
-
-    <script type="text/javascript">
+{% extends 'main.html' %} 
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Patua+One&family=Poppins:wght@500&family=Roboto&family=Roboto+Slab&display=swap" rel="stylesheet">
+<style>
+  /* Custom CSS for the card */
+.main{
+  background-color: #F5F7FF;
+  height: 100vh;
+}
+.card{
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-top: 2%;
+}
+.dashhead{
+margin-bottom: 2%;
+background-color: #4B49AC;
+color: #ffff;
+padding: 2rem;
+border-radius: 1rem 1rem 0rem 0rem;
+font-family: 'Roboto', sans-serif;
+}
+ul li{
+  margin-top: 3%;
+  margin-left: 3%;
+  font-size: medium;
+  
+}
+.items{
+  /* font-family: 'Orbitron', sans-serif; */
+/* font-family: 'Patua One', serif; */
+/* font-family: 'Poppins', sans-serif; */
+font-family: 'Roboto', sans-serif;
+/* font-family: 'Roboto Slab', serif; */
+}
+</style>
+<script type="text/javascript">
       function autoRefreshPage() {
         window.location.reload();
       }
 
       setInterval(autoRefreshPage, 60000);
     </script>
-  </head>
-  <body>
-    <h1 class="ok">Combined System Information</h1>
-    <p>Hostname: {{ data.hostname }}</p>
-    <p>Product Name: {{ data.product_name }}</p>
-    <p>MAC Address: {{ data.mac_address }}</p>
-    <p>IP Address: {{ data.ip_address }}</p>
-    <p>CPU Type: {{ data.cpu_type }}</p>
-    <p>CPU Speed: {{ data.cpu_speed }}</p>
-    <p>Windows Build Number: {{ data.build_number }}</p>
-    <p>Serial Number: {{ data.serial_number }}</p>
-    <p>Product ID: {{ data.product_id }}</p>
-    <p>CPU Usage: {{ data.cpu_usage }}%</p>
-    <p>RAM Usage: {{ data.ram_usage }}%</p>
-    <p>Disk Usage: {{ data.disk_usage }}</p>
-    <p>Current Time: {{ data.current_Time }}</p>
-  </body>
-</html>
+<div class="main overflow-auto">
+<div class="card text-start">
+  <div class="card-body">
+    <div class="h3 dashhead fs-30 ">System Information</div>
+    <ul class="list-unstyled">
+      <li class="mb-2 items">Hostname: <br><span class="text-muted menu-title">{{ data.hostname }} </span></li>
+      <li class="mb-2 items">Product name: <br><span class="text-muted menu-title">{{ data.product_name }}</span></li>
+      <li class="mb-2 items">MAC Address: <br><span class="text-muted menu-title">{{ data.mac_address }}</span></li>
+      <li class="mb-2 items">IP Address: <br><span class="text-muted menu-title">{{ data.ip_address }} </span></li>
+      <li class="mb-2 items">CPU Type: <br><span class="text-muted menu-title">{{ data.cpu_type }}</span></li>
+      <li class="mb-2 items">CPU speed: <br><span class="text-muted menu-title">{{ data.cpu_speed }}</span></li>
+      <li class="mb-2 items">Build Number: <br><span class="text-muted menu-title">{{ data.build_number }} </span></li>
+      <li class="mb-2 items">Serial Number: <br><span class="text-muted menu-title">{{ data.serial_number }}</span></li>
+      <li class="mb-2 items">Product Identification number: <br><span class="text-muted menu-title">{{ data.product_id }}</span></li>
+      <li class="mb-2 items">Current Time: <br><span class="text-muted menu-title">{{ data.current_Time }}</span></li>
+    </ul>
+    <!-- Some borders are removed -->
+    
+    
+  </div>
+</div>
+</div>
+  
 {% endblock content %}
