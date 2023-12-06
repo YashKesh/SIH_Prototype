@@ -27,6 +27,7 @@ def get_random_mac_address():
         mac.append(os.urandom(1)[0] & 0xFE | 0x02)  # Randomize the last 6 bits while keeping the 2nd bit as '1'
     mac_address = ':'.join(map(lambda x: f'{x:02X}', mac))
     return mac_address
+    
 def get_system_info():
     try:
         pythoncom.CoInitialize()  # Initialize pythoncom
@@ -141,20 +142,26 @@ def get_system_usage():
         # RAM Usage
         ram = psutil.virtual_memory()
         ram_usage = ram.percent
-
+        unused_ram = 100 - ram_usage
         # Disk Usage (Combined)
         disk_info = psutil.disk_usage('/')
         disk_usage = f"Total: {disk_info.percent}% Used"
+        diskempty = 100 - disk_info.percent
 
         # Print the collected information
         print(f"CPU Usage: {cpu_usage}")
         print(f"RAM Usage: {ram_usage}")
         print(f"Disk Usage: {disk_usage}")
+        print(f"Unused ram: {unused_ram}")
+        print(f"empty disk: {diskempty}")
         
         usage_data = {
         'cpu_usage': cpu_usage,
         'ram_usage': ram_usage,
-        'disk_usage': disk_usage,}
+        'disk_usage': disk_usage,
+        'unused_ram':unused_ram,
+        'diskempty':diskempty,
+        'disk_info' : disk_info.percent}
 
         return usage_data
 

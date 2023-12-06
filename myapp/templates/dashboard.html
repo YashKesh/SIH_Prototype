@@ -1,12 +1,135 @@
 {% extends 'main.html' %}
 {% block content %}
+{% load static %}
 <style>
-  .main{
+  .main {
     background-color: #F5F7FF;
+    display: flex;
     height: 100vh;
   }
-</style>
-<div class="main">
 
-</div>
+  .card {
+    margin-top: 4%;
+    width: 100%;
+    margin-left: 2%;
+  }
+
+  .canvas-frame {
+    margin-bottom: 3%;
+  }
+
+  .marginleft {
+    margin-left: 2%;
+  }
+</style>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>chart.js</title>
+</head>
+
+<body>
+  <div class="main overflow-auto">
+    <div class="grid-margin marginleft">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Ram Usage</h4>
+          <canvas class="canvas-frame" id="chartId" aria-label="chart" height="250" width="350"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="grid-margin marginleft">
+      <div class="card">
+        <div class="card-body card1">
+          <h4 class="card-title">Disk Usage Information</h4>
+          <canvas class="canvas-frame" id="chartId1" aria-label="chart" height="250" width="350"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="grid-margin marginleft">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Ram Usage</h4>
+          <canvas class="canvas-frame" id="chartId2" aria-label="chart" height="250" width="350"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.1/chart.min.js"></script>
+  <script>
+    var chrt1 = document.getElementById("chartId").getContext("2d");
+    var chartId1 = new Chart(chrt1, {
+      type: 'doughnut',
+      data: {
+        labels: ["RAM USED", "UNUSED RAM"],
+        datasets: [{
+          label: "Ram Usage Graph",
+          data: ["{{data.ram_usage}}", "{{data.unused_ram}}"],
+          backgroundColor: ['red', 'aqua'],
+          hoverOffset: 5
+        }],
+      },
+      options: {
+        responsive: false,
+        cutout: 80,
+        plugins: {
+          doughnutLabel:{
+            labels:[{
+              text:"jai ho",
+              color: "black"
+            }]
+          }
+        },
+      },
+    });
+
+    var chrt2 = document.getElementById("chartId1").getContext("2d");
+    var chartId2 = new Chart(chrt2, {
+      type: 'doughnut',
+      data: {
+        labels: ["DISK USED", "EMPTY DISK"],
+        datasets: [{
+          label: "Disk Usage Graph",
+          data: ["{{data.disk_info}}", "{{data.diskempty}}"],
+          backgroundColor: ['lightblue', 'lightgreen'],
+          hoverOffset: 5
+        }],
+      },
+      options: {
+        responsive: false,
+        cutout: 80,
+        plugins: {
+          doughnutLabel: {
+            labels: [{
+              text: '500',
+              color: 'black',
+              font: {
+                size: 14,
+                weight: 'bold',
+              },
+            }, ],
+          },
+        },
+      },
+    });
+    var chrt3 = document.getElementById("chartId2").getContext("2d");
+    var chartId2 = new Chart(chrt3, {
+      type: 'doughnut',
+      data: {
+        labels: ["RAM USED", "UNUSED RAM"],
+        datasets: [{
+          label: "Ram Usage Graph",
+          data: ["{{data.ram_usage}}", "{{data.unused_ram}}"],
+          backgroundColor: ['yellow', 'aqua'],
+          hoverOffset: 5
+        }],
+      },
+      options: {
+        responsive: false,
+        cutout: 80,
+      },
+    });
+  </script>
+</body>
+
 {% endblock content %}
