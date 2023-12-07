@@ -17,9 +17,9 @@ from . import views
 from django.urls import path
 
 urlpatterns = [
-    path("",views.homepage,name="homepage"),
+    # path("",views.homepage,name="homepage"),
     path("main/",views.mainhtml,name="mainpage"),
-    path("dashboard/",views.dashboard_system_info,name="dashboard"),
+    path("",views.dashboard_system_info,name="dashboard"),
     path("sys_info/",views.system_info,name="sysinformation"),
-    path("installed_apps/",views.installed_apps_list,name="installed apps"),
+    path("installed_apps/",views.installed_apps,name="installed_apps"),
 ]

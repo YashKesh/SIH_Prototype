@@ -12,7 +12,8 @@ import time
 from tabulate import tabulate
 import win32api
 import time
-
+from django.shortcuts import render
+from .utils import get_installed_apps
 # Create your views here.
 def homepage(request):
     return render(request,'sidebar.html')
@@ -116,21 +117,21 @@ def get_publisher_and_version(file_path):
     except Exception as e:
         return "Unknown", "Unknown"
 
-def get_installed_apps():
-    apps = []
-    for root, dirs, files in os.walk(r'C:\Program Files'):
-        for file in files:
-            if file.endswith('.exe'):
-                try:
-                    file_path = os.path.join(root, file)
-                    app_name = os.path.splitext(file)[0]
-                    publisher, version = get_publisher_and_version(file_path)
-                    installation_time = os.path.getctime(file_path)
-                    formatted_installation_time = datetime.datetime.fromtimestamp(installation_time).strftime('%Y-%m-%d %H:%M:%S')
-                    apps.append((app_name, publisher, formatted_installation_time, version))
-                except Exception as e:
-                    pass
-    return apps
+# def get_installed_apps():
+#     apps = []
+#     for root, dirs, files in os.walk(r'C:\Program Files'):
+#         for file in files:
+#             if file.endswith('.exe'):
+#                 try:
+#                     file_path = os.path.join(root, file)
+#                     app_name = os.path.splitext(file)[0]
+#                     publisher, version = get_publisher_and_version(file_path)
+#                     installation_time = os.path.getctime(file_path)
+#                     formatted_installation_time = datetime.datetime.fromtimestamp(installation_time).strftime('%Y-%m-%d %H:%M:%S')
+#                     apps.append((app_name, publisher, formatted_installation_time, version))
+#                 except Exception as e:
+#                     pass
+#     return apps
 
 
 
@@ -184,7 +185,12 @@ def dashboard_system_info(request):
     combined_data = {**system_data, **additional_data}
     return render(request, 'dashboard.html', {'data': combined_data})
 
-def installed_apps_list(request):
-    installed_apps = get_installed_apps()
-    context = {'installed_apps': installed_apps}
-    return render(request, 'installed_apps.html', context)
+# def installed_apps_list(request):
+#     installed_apps = get_installed_apps()
+#     context = {'installed_apps': installed_apps}
+#     return render(request, 'installed_apps.html', context)
+
+def installed_apps(request):
+    program_files_path = r'C:\Program Files'
+    installed_apps = get_installed_apps(program_files_path)
+    return render(request, 'installed_apps.html', {'installed_apps': installed_apps})

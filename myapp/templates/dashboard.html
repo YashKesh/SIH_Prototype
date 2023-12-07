@@ -4,7 +4,6 @@
 <style>
   .main {
     background-color: #F5F7FF;
-    display: flex;
     height: 100vh;
   }
 
@@ -16,11 +15,31 @@
 
   .canvas-frame {
     margin-bottom: 3%;
+    
   }
 
   .marginleft {
-    margin-left: 2%;
+    margin-left: 1.5%;
   }
+  .share{
+    display: flex;
+  }
+  .information{
+    margin-top: 25%;
+    font-family: 'Roboto', sans-serif;
+    font-size: medium;
+    margin-left: -5%;
+  }
+  .text-muted{
+    font-weight: 400;
+    font-size: large;
+  }
+.data{
+  margin-top: 3rem;
+}
+.security{
+  margin-top: 0%;
+}
 </style>
 
 <head>
@@ -30,11 +49,15 @@
 
 <body>
   <div class="main overflow-auto">
+    <div class="row">
     <div class="grid-margin marginleft">
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">Ram Usage</h4>
-          <canvas class="canvas-frame" id="chartId" aria-label="chart" height="250" width="350"></canvas>
+          <div class="share">
+          <canvas class="canvas-frame" id="chartId" aria-label="chart" height="250" width="280"></canvas>
+          <span class="information">Ram usage <br><span class="text-muted data">{{data.ram_usage}}%</span></span>
+        </div>
         </div>
       </div>
     </div>
@@ -42,21 +65,69 @@
       <div class="card">
         <div class="card-body card1">
           <h4 class="card-title">Disk Usage Information</h4>
-          <canvas class="canvas-frame" id="chartId1" aria-label="chart" height="250" width="350"></canvas>
+          <div class="share">
+          <canvas class="canvas-frame" id="chartId1" aria-label="chart" height="250" width="280"></canvas>
+          <span class="information disk">Disk Occupied <br><span class="text-muted data">{{data.disk_info}}%</span></span>
+        </div>
         </div>
       </div>
     </div>
     <div class="grid-margin marginleft">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Ram Usage</h4>
-          <canvas class="canvas-frame" id="chartId2" aria-label="chart" height="250" width="350"></canvas>
+          <h4 class="card-title">Incidents Report</h4>
+          <div class="share">
+          <canvas class="canvas-frame" id="chartId2" aria-label="chart" height="250" width="280"></canvas>
+          <span class="information disk">Live Incidents <br><span class="text-muted data">1</span></span>   
+           <!--in the above the span the live incident count needs to be displayed for now it is static  -->
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="card security">
+      <div class="card-body">
+        <h4 class="card-title">Security State</h4>
+        <canvas id="myChart" width="150" height="20"></canvas>
+        <!-- This is also static for now -->
+      </div>
+    </div>
+  </div>
+  </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.1/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Antispyware', 'Antivirus', 'Auto-Update'],
+        datasets: [{
+          label: 'States',
+          data: [100, 89, 75],
+          backgroundColor: [
+          'rgba(255, 99, 132, 0.6)', // Change the color of the first bar
+          'rgba(255, 159, 64, 0.6)', // Change the color of the second bar
+          'rgba(189, 254, 86, 0.6)' // Change the color of the third bar
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+          'rgb(189, 254, 86)'
+        ],
+        borderWidth: 1
+        }],
+      },
+      options: {
+        indexAxis: 'y', // <-- here
+        responsive: true,
+        legend: {
+          display: false // Hide the legend
+        }
+      }
+    });
+    // This above part is the horizontal bar chart
     var chrt1 = document.getElementById("chartId").getContext("2d");
     var chartId1 = new Chart(chrt1, {
       type: 'doughnut',
@@ -65,7 +136,7 @@
         datasets: [{
           label: "Ram Usage Graph",
           data: ["{{data.ram_usage}}", "{{data.unused_ram}}"],
-          backgroundColor: ['red', 'aqua'],
+          backgroundColor: ['rgba(255, 99, 133, 0.788)', 'rgba(54, 162, 235, 0.6)'],
           hoverOffset: 5
         }],
       },
@@ -116,10 +187,10 @@
     var chartId2 = new Chart(chrt3, {
       type: 'doughnut',
       data: {
-        labels: ["RAM USED", "UNUSED RAM"],
+        labels: [ "Total Incidents","Live Incident"],
         datasets: [{
           label: "Ram Usage Graph",
-          data: ["{{data.ram_usage}}", "{{data.unused_ram}}"],
+          data: [5, 1],
           backgroundColor: ['yellow', 'aqua'],
           hoverOffset: 5
         }],
