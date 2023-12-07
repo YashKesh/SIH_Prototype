@@ -6,7 +6,9 @@
     background-color: #F5F7FF;
     height: 100vh;
   }
-
+  .doughnut{
+    gap: 2rem;
+  }
   .card {
     margin-top: 4%;
     width: 100%;
@@ -28,7 +30,7 @@
     margin-top: 25%;
     font-family: 'Roboto', sans-serif;
     font-size: medium;
-    margin-left: -5%;
+    margin-left: 1rem;
   }
   .text-muted{
     font-weight: 400;
@@ -36,9 +38,13 @@
   }
 .data{
   margin-top: 3rem;
+  
 }
 .security{
   margin-top: 0%;
+}
+.barchart{
+  width: 50%;
 }
 </style>
 
@@ -49,13 +55,13 @@
 
 <body>
   <div class="main overflow-auto">
-    <div class="row">
+    <div class="row doughnut">
     <div class="grid-margin marginleft">
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">Ram Usage</h4>
           <div class="share">
-          <canvas class="canvas-frame" id="chartId" aria-label="chart" height="250" width="280"></canvas>
+          <canvas class="canvas-frame" id="chartId" aria-label="chart" height="200" width="200"></canvas>
           <span class="information">Ram usage <br><span class="text-muted data">{{data.ram_usage}}%</span></span>
         </div>
         </div>
@@ -66,7 +72,7 @@
         <div class="card-body card1">
           <h4 class="card-title">Disk Usage Information</h4>
           <div class="share">
-          <canvas class="canvas-frame" id="chartId1" aria-label="chart" height="250" width="280"></canvas>
+          <canvas class="canvas-frame" id="chartId1" aria-label="chart" height="200" width="200"></canvas>
           <span class="information disk">Disk Occupied <br><span class="text-muted data">{{data.disk_info}}%</span></span>
         </div>
         </div>
@@ -77,7 +83,7 @@
         <div class="card-body">
           <h4 class="card-title">Incidents Report</h4>
           <div class="share">
-          <canvas class="canvas-frame" id="chartId2" aria-label="chart" height="250" width="280"></canvas>
+          <canvas class="canvas-frame" id="chartId2" aria-label="chart" height="200" width="200"></canvas>
           <span class="information disk">Live Incidents <br><span class="text-muted data">1</span></span>   
            <!--in the above the span the live incident count needs to be displayed for now it is static  -->
           </div>
@@ -86,10 +92,10 @@
     </div>
   </div>
   <div class="row">
-    <div class="card security">
-      <div class="card-body">
+    <div class="card security barchart">
+      <div class="card-body ">
         <h4 class="card-title">Security State</h4>
-        <canvas id="myChart" width="150" height="20"></canvas>
+        <canvas class="barchart" id="myChart" width="200" height="70"></canvas>
         <!-- This is also static for now -->
       </div>
     </div>
@@ -102,28 +108,40 @@
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Antispyware', 'Antivirus', 'Auto-Update'],
+        labels: ['Antispyware', 'Antivirus', 'Auto-Update',"Firewall"],
         datasets: [{
           label: 'States',
-          data: [100, 89, 75],
+          data: [100, 89, 75,45],
           backgroundColor: [
           'rgba(255, 99, 132, 0.6)', // Change the color of the first bar
           'rgba(255, 159, 64, 0.6)', // Change the color of the second bar
-          'rgba(189, 254, 86, 0.6)' // Change the color of the third bar
-        ],
+          'rgba(189, 254, 86, 0.6)', // Change the color of the third bar
+          'rgba(234, 254, 86, 0.6)'
+          ],
         borderColor: [
           'rgb(255, 99, 132)',
           'rgb(255, 159, 64)',
-          'rgb(189, 254, 86)'
+          'rgb(189, 254, 86)',
+          'rgba(189, 254, 86)'
         ],
         borderWidth: 1
         }],
       },
       options: {
-        indexAxis: 'y', // <-- here
+        indexAxis: 'x', // <-- here
         responsive: true,
-        legend: {
-          display: false // Hide the legend
+        plugins:{
+          legend: {
+            display: false // Hide the legend
+          },
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false // Hide the x-axis grid lines
+            }
+          },
+          
         }
       }
     });
@@ -142,15 +160,22 @@
       },
       options: {
         responsive: false,
-        cutout: 80,
+        cutout: 70,
+        legend: {
+          display: false // Hide the legend
+        },
         plugins: {
           doughnutLabel:{
             labels:[{
               text:"jai ho",
               color: "black"
             }]
-          }
+          },
+          legend: {
+            display: false // Hide the legend
+          },
         },
+        
       },
     });
 
@@ -168,7 +193,7 @@
       },
       options: {
         responsive: false,
-        cutout: 80,
+        cutout: 70,
         plugins: {
           doughnutLabel: {
             labels: [{
@@ -179,6 +204,9 @@
                 weight: 'bold',
               },
             }, ],
+          },
+          legend: {
+            display: false // Hide the legend
           },
         },
       },
@@ -197,7 +225,13 @@
       },
       options: {
         responsive: false,
-        cutout: 80,
+        cutout: 70,
+        plugins:{
+          legend: {
+            display: false // Hide the legend
+          },
+        }
+        
       },
     });
   </script>
