@@ -130,6 +130,8 @@ h4{
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.1/chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="chartjs-plugin-doughnutlabel.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+
   <script>
     //new doughnut chart code trial
     //
@@ -137,21 +139,23 @@ h4{
     const chart = new Chart(barchart, {
       type: 'bar',
       data: {
-        labels: ['Antispyware', 'Antivirus', 'Auto-Update',"Firewall"],
+        labels: ['Antispyware', 'Antivirus', 'Auto-Update',"Firewall","Internet"],
         datasets: [{
           label: 'States',
-          data: [100, 89, 75,45],
+          data: [100, 89, 75,45,95],
           backgroundColor: [
           'rgba(255, 99, 132, 0.6)', // Change the color of the first bar
           'rgba(255, 159, 64, 0.6)', // Change the color of the second bar
           'rgba(189, 254, 86, 0.6)', // Change the color of the third bar
-          'rgba(234, 254, 86, 0.6)'
+          'rgba(234, 254, 86, 0.6)',
+          'rgba(175, 200, 86, 0.6)',
           ],
         borderColor: [
           'rgb(255, 99, 132)',
           'rgb(255, 159, 64)',
           'rgb(189, 254, 86)',
-          'rgba(189, 254, 86)'
+          'rgba(189, 254, 86)',
+          'rgba(175, 200, 86)',
         ],
         borderWidth: 1
         }],
@@ -231,16 +235,6 @@ h4{
         responsive: false,
         cutout: 70,
         plugins: {
-          doughnutLabel: {
-            labels: [{
-              text: '500',
-              color: 'black',
-              font: {
-                size: 14,
-                weight: 'bold',
-              },
-            }],
-          },
           legend: {
             display: false // Hide the legend
           },
