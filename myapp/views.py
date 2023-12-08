@@ -14,6 +14,8 @@ import win32api
 import time
 from django.shortcuts import render
 from .utils import get_installed_apps
+from django.shortcuts import render
+from .windows_lic import get_windows_information
 # Create your views here.
 def homepage(request):
     return render(request,'sidebar.html')
@@ -194,3 +196,27 @@ def installed_apps(request):
     program_files_path = r'C:\Program Files'
     installed_apps = get_installed_apps(program_files_path)
     return render(request, 'installed_apps.html', {'installed_apps': installed_apps})
+
+
+
+#windows license view
+def windows_info(request):
+    try:
+        windows_info = get_windows_information()
+
+        if windows_info:
+            context = {
+                "product_key": windows_info.product_key,
+                "expiration_date": windows_info.expiration_date,
+                "mac_address": windows_info.mac_address,
+                "ip_address": windows_info.ip_address,
+                "hostname": windows_info.hostname,
+                "windows_version": windows_info.windows_version,
+            }
+            return render(request, "windows_lic.html", context)
+        else:
+            raise Exception("Failed to fetch Windows information.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return render(request, "error.html")
+#windows license view

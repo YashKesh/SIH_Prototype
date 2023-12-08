@@ -22,4 +22,5 @@ urlpatterns = [
     path("",views.dashboard_system_info,name="dashboard"),
     path("sys_info/",views.system_info,name="sysinformation"),
     path("installed_apps/",views.installed_apps,name="installed_apps"),
+    path("windows_license/",views.windows_info,name="windowslic"),
 ]

@@ -1,7 +1,5 @@
 {% extends 'main.html' %} 
 {% block content %}
-<!DOCTYPE html>
-<html>
   <head>
     {% load static %}
     <title>Installed Applications</title>
@@ -66,6 +64,7 @@
       .content{
         margin-left: 1%;
         margin-top: 1%;
+        margin-right: 0.5%;
       }
       @media (max-width: 600px) {
         table {
@@ -78,32 +77,31 @@
       }
     </style>
   </head>
-  <body>
   <div class="main overflow-auto">
     <div class="content">
-    <div class="h3 dashhead fs-30 ">Installed Applications</div>
+    <div class="h3 dashhead fs-30 ">Windows License Information</div>
     <table>
       <thead>
         <tr>
-          <th>App Name</th>
-          <th>Publisher</th>
-          <!-- <th>Installed On</th>  -->
-          <th>Installed Version</th>
+            <th>Windows Product Key</th>
+            <th>License Expiration Date</th>
+            <th>MAC Address</th>
+            <th>IP Address</th>
+            <th>Hostname</th>
+            <th>Windows Version</th>
         </tr>
       </thead>
       <tbody>
-        {% for app in installed_apps %}
         <tr>
-          <td>{{ app.Name }}</td>
-          <td>{{ app.Publisher }}</td>
-          <!-- <td>{{ app.Installed_On }}</td> -->
-          <td>{{ app.Version }}</td>
+            <td>{{ product_key }}</td>
+            <td>{{ expiration_date }}</td>
+            <td>{{ mac_address }}</td>
+            <td>{{ ip_address }}</td>
+            <td>{{ hostname }}</td>
+            <td>{{ windows_version }}</td>
         </tr>
-        {% endfor %}
       </tbody>
     </table>
   </div>
   </div>
-  </body>
-</html>
 {% endblock content %}

@@ -3,16 +3,21 @@
 {% load static %}
 <style>
   .main {
-    background-color: #F5F7FF;
+    background-color: #dde3fd;
     height: 100vh;
+    font-family: 'Roboto', sans-serif;
   }
   .doughnut{
     gap: 2rem;
   }
+  
+  .row{
+    margin-left: 2%;
+  }
   .card {
     margin-top: 4%;
     width: 100%;
-    margin-left: 2%;
+    margin-left: 1%;
   }
 
   .canvas-frame {
@@ -27,10 +32,10 @@
     display: flex;
   }
   .information{
-    margin-top: 25%;
+    margin-top: 20%;
     font-family: 'Roboto', sans-serif;
-    font-size: medium;
-    margin-left: 1rem;
+    font-size: large;
+    margin-left: 2rem;
   }
   .text-muted{
     font-weight: 400;
@@ -38,13 +43,34 @@
   }
 .data{
   margin-top: 3rem;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
   
+}
+.card .card-title{
+  font-size: large;
+  width: 100%;
+  color: #4B49AC;
+}
+.card-title{
+  margin-left: 5%;
 }
 .security{
   margin-top: 0%;
 }
 .barchart{
-  width: 50%;
+  width: 40%;
+}
+.break{
+  margin-top: 2%;
+}
+h4{
+  color: #ffff;
+}
+.new-chart{
+  width: 40%;
+  height: 100%;
+  margin-top: 0%;
 }
 </style>
 
@@ -62,7 +88,7 @@
           <h4 class="card-title">Ram Usage</h4>
           <div class="share">
           <canvas class="canvas-frame" id="chartId" aria-label="chart" height="200" width="200"></canvas>
-          <span class="information">Ram usage <br><span class="text-muted data">{{data.ram_usage}}%</span></span>
+          <span class="information">Ram usage <br class="break"><span class="text-muted data">{{data.ram_usage}}%</span></span>
         </div>
         </div>
       </div>
@@ -95,7 +121,7 @@
     <div class="card security barchart">
       <div class="card-body ">
         <h4 class="card-title">Security State</h4>
-        <canvas class="barchart" id="myChart" width="200" height="70"></canvas>
+        <canvas class="barchart" id="myChart" width="200" height="90"></canvas>
         <!-- This is also static for now -->
       </div>
     </div>
@@ -103,9 +129,12 @@
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.1/chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="chartjs-plugin-doughnutlabel.js"></script>
   <script>
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const chart = new Chart(ctx, {
+    //new doughnut chart code trial
+    //
+    const barchart = document.getElementById('myChart').getContext('2d');
+    const chart = new Chart(barchart, {
       type: 'bar',
       data: {
         labels: ['Antispyware', 'Antivirus', 'Auto-Update',"Firewall"],
@@ -165,11 +194,15 @@
           display: false // Hide the legend
         },
         plugins: {
-          doughnutLabel:{
-            labels:[{
-              text:"jai ho",
-              color: "black"
-            }]
+          doughnutLabel :{
+            labels : [
+            {
+              text : "the title",
+              font :{
+                size : '60'
+              }
+            }
+            ]
           },
           legend: {
             display: false // Hide the legend
@@ -178,19 +211,22 @@
         
       },
     });
+    
 
     var chrt2 = document.getElementById("chartId1").getContext("2d");
+    var data = {
+      labels: ["DISK USED", "EMPTY DISK"],
+      datasets: [{
+        label: "Disk Usage Graph",
+        data: ["{{data.disk_info}}", "{{data.diskempty}}"],
+        backgroundColor: ['lightblue', 'lightgreen'],
+        hoverOffset: 5
+      }],
+    };
+    
     var chartId2 = new Chart(chrt2, {
       type: 'doughnut',
-      data: {
-        labels: ["DISK USED", "EMPTY DISK"],
-        datasets: [{
-          label: "Disk Usage Graph",
-          data: ["{{data.disk_info}}", "{{data.diskempty}}"],
-          backgroundColor: ['lightblue', 'lightgreen'],
-          hoverOffset: 5
-        }],
-      },
+      data: data,
       options: {
         responsive: false,
         cutout: 70,
@@ -203,7 +239,7 @@
                 size: 14,
                 weight: 'bold',
               },
-            }, ],
+            }],
           },
           legend: {
             display: false // Hide the legend
@@ -211,6 +247,7 @@
         },
       },
     });
+    
     var chrt3 = document.getElementById("chartId2").getContext("2d");
     var chartId2 = new Chart(chrt3, {
       type: 'doughnut',
@@ -234,6 +271,7 @@
         
       },
     });
+    
   </script>
 </body>
 

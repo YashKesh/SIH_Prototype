@@ -1,0 +1,40 @@
+{% extends 'main.html' %}
+{% block content %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error</title>
+  </head>
+  <style>
+    .main {
+        background-color: #dde3fd;
+        height: 100vh;
+        font-family: 'Roboto', sans-serif;
+      }
+    h1 , p {
+        text-align: center;
+        
+    }
+    h1{
+        background-color: #4B49AC;
+        color : #fff;
+        padding: 1rem;
+        width: 97%;
+        margin-top: 5%;
+        font-weight: 800;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    p{
+        margin-top: 1%;
+        font-size: medium;
+        font-weight: 400;
+    }
+  </style>
+<div class="main overflow-auto">
+    <h1>Error</h1>
+    <p>Failed to fetch Windows information.</p>
+</div>
+    
+{% endblock content %}
