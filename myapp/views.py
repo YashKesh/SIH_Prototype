@@ -61,7 +61,7 @@ def get_system_info():
         build_number = platform.win32_ver()[1]
         
         #date time
-        current_Time = datetime.datetime.now().time()
+        current_Time = datetime.now().time()
 
         # Serial Number and Product ID (Windows-specific)
         try:
@@ -222,10 +222,16 @@ def windows_info(request):
             raise Exception("Failed to fetch Windows information.")
     except Exception as e:
         print(f"Error: {e}")
-        return render(request, "error.html")
+        return render(request, "error.html",e)
 #windows license view
 
 #custom configuration for the windows license view
+
+from django.shortcuts import render
+import csv
+import io
+from datetime import datetime,time
+from .models import LicenseData
 
 def upload_csv(request):
     data = []
@@ -237,12 +243,66 @@ def upload_csv(request):
         decoded_file = csv_file.read().decode('utf-8-sig')
         reader = csv.reader(io.StringIO(decoded_file))
 
+        # Get the header row
+        header = next(reader, None)
+
+        # Define mapping between CSV column names and model field names
+        field_mapping = {
+            'Windows Product Key': 'windows_product_key',
+            'License Expiration Date': 'license_expiration_date',
+            'MAC Address': 'mac_address',
+            'IP Address': 'ip_address',
+            'Hostname': 'hostname',
+            'Windows Version': 'windows_version',
+        }
+
         for row in reader:
+            # Create a dictionary with the mapped field names
+            row_data = {field_mapping[column]: value for column, value in zip(header, row)}
+            try:
+                original_date = row_data['license_expiration_date']
+                original_date = original_date.replace('Sept', 'Sep')
+                # Replace the dot after the abbreviated month
+                original_date = original_date.replace('.', '')
+
+                # Convert to datetime object
+                date_object = datetime.strptime(original_date, "%b %d, %Y, %I:%M %p")
+
+                # Check if the time component is midnight
+                if date_object.time() == time(0, 0):
+                    # If the time is midnight, set it to 00:00:00
+                    formatted_date = date_object.strftime("%Y-%m-%d 00:00:00")
+                else:
+                    # If the time is present, use the original time
+                    formatted_date = date_object.strftime("%Y-%m-%d %H:%M:%S")
+                # formatted_date = date_object.strftime("%Y-%m-%d %H:%M:%S")
+                row_data['license_expiration_date'] = formatted_date
+            except ValueError:
+                # Handle invalid date format gracefully
+                row_data['license_expiration_date'] = None
+
+            LicenseData.objects.create(**row_data)
             data.append(row)
 
     # Pass data to the template
     context = {'data': data}
     return render(request, 'custom_license.html', context)
+# def upload_csv(request):
+#     data = []
+
+#     if request.method == 'POST' and request.FILES['csv_file']:
+#         csv_file = request.FILES['csv_file']
+
+#         # Read CSV data
+#         decoded_file = csv_file.read().decode('utf-8-sig')
+#         reader = csv.reader(io.StringIO(decoded_file))
+
+#         for row in reader:
+#             data.append(row)
+
+#     # Pass data to the template
+#     context = {'data': data}
+#     return render(request, 'custom_license.html', context)
 
 #end of the section 
 
