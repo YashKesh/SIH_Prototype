@@ -245,6 +245,8 @@ import io
 from datetime import datetime,time
 from .models import LicenseData
 
+from .models import LicenseData  # Replace 'LicenseData' with the actual name of your model
+
 def upload_csv(request):
     data = []
 
@@ -259,6 +261,7 @@ def upload_csv(request):
             # Get the header row
             header = next(reader, None)
             data.append(header)
+
             # Validate header and column count
             expected_header = ['Windows Product Key', 'License Expiration Date', 'MAC Address', 'IP Address', 'Hostname', 'Windows Version']
             if header != expected_header:
@@ -302,8 +305,16 @@ def upload_csv(request):
                     # Handle invalid date format gracefully
                     row_data['license_expiration_date'] = None
 
-                LicenseData.objects.create(**row_data)
-                data.append(row)
+                # Check if the record already exists
+                existing_record = LicenseData.objects.filter(
+                    windows_product_key=row_data['windows_product_key'],
+                    mac_address=row_data['mac_address']
+                ).exists()
+
+                if not existing_record:
+                    # If the combination doesn't exist, insert the data into the database
+                    LicenseData.objects.create(**row_data)
+                    data.append(row)
 
     except ValueError as e:
         # Redirect to an error page if there's an issue with the CSV data
@@ -313,6 +324,7 @@ def upload_csv(request):
     # Pass data to the template
     context = {'data': data}
     return render(request, 'custom_license.html', context)
+
 # def upload_csv(request):
 #     data = []
 
