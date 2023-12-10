@@ -1,3 +1,4 @@
+from django.http import HttpResponseServerError
 from django.shortcuts import render
 from django.shortcuts import render
 import os
@@ -19,6 +20,7 @@ from .windows_lic import get_windows_information
 from django.shortcuts import render
 import csv
 import io
+from datetime import datetime,time
 
 # Create your views here.
 def homepage(request):
@@ -225,8 +227,18 @@ def windows_info(request):
         return render(request, "error.html",e)
 #windows license view
 
+
+
+
+
+
+
+
+
+
 #custom configuration for the windows license view
 
+from .models import LicenseData
 from django.shortcuts import render
 import csv
 import io
@@ -236,53 +248,67 @@ from .models import LicenseData
 def upload_csv(request):
     data = []
 
-    if request.method == 'POST' and request.FILES['csv_file']:
-        csv_file = request.FILES['csv_file']
+    try:
+        if request.method == 'POST' and request.FILES['csv_file']:
+            csv_file = request.FILES['csv_file']
 
-        # Read CSV data
-        decoded_file = csv_file.read().decode('utf-8-sig')
-        reader = csv.reader(io.StringIO(decoded_file))
+            # Read CSV data
+            decoded_file = csv_file.read().decode('utf-8-sig')
+            reader = csv.reader(io.StringIO(decoded_file))
 
-        # Get the header row
-        header = next(reader, None)
+            # Get the header row
+            header = next(reader, None)
+            data.append(header)
+            # Validate header and column count
+            expected_header = ['Windows Product Key', 'License Expiration Date', 'MAC Address', 'IP Address', 'Hostname', 'Windows Version']
+            if header != expected_header:
+                raise ValueError("Invalid CSV header")
 
-        # Define mapping between CSV column names and model field names
-        field_mapping = {
-            'Windows Product Key': 'windows_product_key',
-            'License Expiration Date': 'license_expiration_date',
-            'MAC Address': 'mac_address',
-            'IP Address': 'ip_address',
-            'Hostname': 'hostname',
-            'Windows Version': 'windows_version',
-        }
+            # Define mapping between CSV column names and model field names
+            field_mapping = {
+                'Windows Product Key': 'windows_product_key',
+                'License Expiration Date': 'license_expiration_date',
+                'MAC Address': 'mac_address',
+                'IP Address': 'ip_address',
+                'Hostname': 'hostname',
+                'Windows Version': 'windows_version',
+            }
 
-        for row in reader:
-            # Create a dictionary with the mapped field names
-            row_data = {field_mapping[column]: value for column, value in zip(header, row)}
-            try:
-                original_date = row_data['license_expiration_date']
-                original_date = original_date.replace('Sept', 'Sep')
-                # Replace the dot after the abbreviated month
-                original_date = original_date.replace('.', '')
+            for row in reader:
+                # Validate column count
+                if len(row) != len(expected_header):
+                    raise ValueError("Invalid number of columns in CSV row")
 
-                # Convert to datetime object
-                date_object = datetime.strptime(original_date, "%b %d, %Y, %I:%M %p")
+                # Create a dictionary with the mapped field names
+                row_data = {field_mapping[column]: value for column, value in zip(header, row)}
+                try:
+                    original_date = row_data['license_expiration_date']
+                    original_date = original_date.replace('Sept', 'Sep')
+                    # Replace the dot after the abbreviated month
+                    original_date = original_date.replace('.', '')
 
-                # Check if the time component is midnight
-                if date_object.time() == time(0, 0):
-                    # If the time is midnight, set it to 00:00:00
-                    formatted_date = date_object.strftime("%Y-%m-%d 00:00:00")
-                else:
-                    # If the time is present, use the original time
-                    formatted_date = date_object.strftime("%Y-%m-%d %H:%M:%S")
-                # formatted_date = date_object.strftime("%Y-%m-%d %H:%M:%S")
-                row_data['license_expiration_date'] = formatted_date
-            except ValueError:
-                # Handle invalid date format gracefully
-                row_data['license_expiration_date'] = None
+                    # Convert to datetime object
+                    date_object = datetime.strptime(original_date, "%b %d, %Y, %I:%M %p")
 
-            LicenseData.objects.create(**row_data)
-            data.append(row)
+                    # Check if the time component is midnight
+                    if date_object.time() == time(0, 0):
+                        # If the time is midnight, set it to 00:00:00
+                        formatted_date = date_object.strftime("%Y-%m-%d 00:00:00")
+                    else:
+                        # If the time is present, use the original time
+                        formatted_date = date_object.strftime("%Y-%m-%d %H:%M:%S")
+                    row_data['license_expiration_date'] = formatted_date
+                except ValueError:
+                    # Handle invalid date format gracefully
+                    row_data['license_expiration_date'] = None
+
+                LicenseData.objects.create(**row_data)
+                data.append(row)
+
+    except ValueError as e:
+        # Redirect to an error page if there's an issue with the CSV data
+        return HttpResponseServerError(f"Error: {e}")
+        # return render(request, "error.html")
 
     # Pass data to the template
     context = {'data': data}
@@ -305,6 +331,15 @@ def upload_csv(request):
 #     return render(request, 'custom_license.html', context)
 
 #end of the section 
+
+
+
+
+
+
+
+
+
 
 #custom license database
 def custom_license_update(request):
