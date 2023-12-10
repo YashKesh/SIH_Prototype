@@ -16,6 +16,10 @@ from django.shortcuts import render
 from .utils import get_installed_apps
 from django.shortcuts import render
 from .windows_lic import get_windows_information
+from django.shortcuts import render
+import csv
+import io
+
 # Create your views here.
 def homepage(request):
     return render(request,'sidebar.html')
@@ -220,3 +224,28 @@ def windows_info(request):
         print(f"Error: {e}")
         return render(request, "error.html")
 #windows license view
+
+#custom configuration for the windows license view
+
+def upload_csv(request):
+    data = []
+
+    if request.method == 'POST' and request.FILES['csv_file']:
+        csv_file = request.FILES['csv_file']
+
+        # Read CSV data
+        decoded_file = csv_file.read().decode('utf-8-sig')
+        reader = csv.reader(io.StringIO(decoded_file))
+
+        for row in reader:
+            data.append(row)
+
+    # Pass data to the template
+    context = {'data': data}
+    return render(request, 'custom_license.html', context)
+
+#end of the section 
+
+#custom license database
+def custom_license_update(request):
+    return render(request,'custom_license_update.html')

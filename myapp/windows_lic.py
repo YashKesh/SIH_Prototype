@@ -47,15 +47,15 @@ def get_windows_information():
         return None
 
 
-# Example usage
-# windows_info = get_windows_information()
 
-# if windows_info:
-#     print(f"Windows Product Key: {windows_info.product_key}")
-#     print(f"License Expiration Date: {windows_info.expiration_date}")
-#     print(f"MAC Address: {windows_info.mac_address}")
-#     print(f"IP Address: {windows_info.ip_address}")
-#     print(f"Hostname: {windows_info.hostname}")
-#     print(f"Windows Version: {windows_info.windows_version}")
-# else:
-#     print("Failed to fetch Windows information.")
+windows_info = get_windows_information()
+
+if windows_info:
+    print(f"Windows Product Key: {windows_info.product_key}")
+    print(f"License Expiration Date: {windows_info.expiration_date}")
+    print(f"MAC Address: {windows_info.mac_address}")
+    print(f"IP Address: {windows_info.ip_address}")
+    print(f"Hostname: {windows_info.hostname}")
+    print(f"Windows Version: {windows_info.windows_version}")
+else:
+    print("Failed to fetch Windows information.")

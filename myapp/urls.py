@@ -23,4 +23,6 @@ urlpatterns = [
     path("sys_info/",views.system_info,name="sysinformation"),
     path("installed_apps/",views.installed_apps,name="installed_apps"),
     path("windows_license/",views.windows_info,name="windowslic"),
+    path('custom_license',views.upload_csv,name="custom_license"),
+    path('custom_license_update',views.custom_license_update,name="custom_license_update"),
 ]

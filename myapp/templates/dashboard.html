@@ -72,6 +72,22 @@ h4{
   height: 100%;
   margin-top: 0%;
 }
+.gaugedisplay{
+  width: 40%;
+  margin-top: 0%;
+  height: 70%;
+}
+.myDiv{
+  display: flex;
+  height: 70%;
+  margin-top: 0%;
+}
+.second{
+  gap: 1rem;
+}
+.plotly{
+  width: 70%;
+}
 </style>
 
 <head>
@@ -117,23 +133,64 @@ h4{
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="card security barchart">
+  <div class="row second">
+    <div class="card security barchart second-chart">
       <div class="card-body ">
         <h4 class="card-title">Security State</h4>
-        <canvas class="barchart" id="myChart" width="200" height="90"></canvas>
+        <canvas class="barchart" id="myChart" width="200" height="120"></canvas>
         <!-- This is also static for now -->
       </div>
     </div>
+    <div class="card gaugedisplay second-chart">
+      <div class="card-body">
+        <h4 class="card-title">Global Compliance</h4>
+        <div class="share">
+            <div id='myDiv' class="myDiv"></div>  
+         <!--in the above the span the live incident count needs to be displayed for now it is static  -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    
   </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.1/chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="chartjs-plugin-doughnutlabel.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+  <script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>
 
   <script>
     //new doughnut chart code trial
+    var data = [
+    {
+      domain: { x: [0, 1], y: [0, 1] },
+      value: 63,
+      title: { text: "" },
+      type: "indicator",
+      mode: "gauge+number+delta",
+      delta: { reference: 34 },
+      gauge: {
+        axis: { range: [null, 100] },
+        bar: { color: "lightgreen" },
+        steps: [
+          { range: [0, 100], color: "white" },
+         
+        ],
+        bordercolor: "lightgreen",
+        threshold: {
+          line: { color: "red", width: 4 },
+          thickness: 0.75,
+          value: 99
+        },
+        hoverinfo: "all"
+      }
+    }
+  ];
+  var layout = { width: 450, height: 300, margin: { t: 0, b: 0 } ,
+  font: { color: "#4B49AC", family: 'Roboto' }};
+  Plotly.newPlot('myDiv', data, layout);
     //
     const barchart = document.getElementById('myChart').getContext('2d');
     const chart = new Chart(barchart, {
@@ -161,7 +218,7 @@ h4{
         }],
       },
       options: {
-        indexAxis: 'x', // <-- here
+        indexAxis: 'y', // <-- here
         responsive: true,
         plugins:{
           legend: {
@@ -172,7 +229,7 @@ h4{
           x: {
             grid: {
               display: false // Hide the x-axis grid lines
-            }
+            },
           },
           
         }
@@ -209,7 +266,7 @@ h4{
             ]
           },
           legend: {
-            display: false // Hide the legend
+            display: false     // Hide the legend
           },
         },
         
