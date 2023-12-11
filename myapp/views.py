@@ -1,6 +1,4 @@
 from django.http import HttpResponseServerError
-from django.shortcuts import render
-from django.shortcuts import render
 import os
 import platform
 import socket
@@ -15,12 +13,11 @@ import win32api
 import time
 from django.shortcuts import render
 from .utils import get_installed_apps
-from django.shortcuts import render
 from .windows_lic import get_windows_information
-from django.shortcuts import render
 import csv
 import io
 from datetime import datetime,time
+from .models import LicenseData
 
 # Create your views here.
 def homepage(request):
@@ -238,14 +235,7 @@ def windows_info(request):
 
 #custom configuration for the windows license view
 
-from .models import LicenseData
-from django.shortcuts import render
-import csv
-import io
-from datetime import datetime,time
-from .models import LicenseData
-
-from .models import LicenseData  # Replace 'LicenseData' with the actual name of your model
+  # Replace 'LicenseData' with the actual name of your model
 
 def upload_csv(request):
     data = []
