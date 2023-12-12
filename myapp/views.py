@@ -346,3 +346,60 @@ def upload_csv(request):
 #custom license database
 def custom_license_update(request):
     return render(request,'custom_license_update.html')
+
+
+
+
+#api testing
+
+#Api function testting 
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializers import WindowsInformationSerializer
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+# from .models import WindowsInformation
+from .models import LicenseData
+from .serializers import WindowsInformationSerializer
+@api_view(['POST'])
+def receive_windows_information(request):
+    data = request.data
+    serializer = WindowsInformationSerializer(data=data)
+
+    if serializer.is_valid():
+        # Try to get an existing entry by product key
+        try:
+            windows_info = LicenseData.objects.get(product_key=data['product_key'])
+            serializer = WindowsInformationSerializer(windows_info, data=data)
+        except LicenseData.DoesNotExist:
+            pass  # No existing entry, create a new one
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+from .models import SystemUsage
+from .serializers import SystemUsageSerializer
+@api_view(['POST'])
+def receive_system_usage(request):
+    data = request.data
+    product_key = data.get('product_key')
+
+    # Try to get an existing entry by product key
+    try:
+        system_usage = SystemUsage.objects.get(product_key=product_key)
+        serializer = SystemUsageSerializer(system_usage, data=data)
+    except SystemUsage.DoesNotExist:
+        # No existing entry, create a new one
+        serializer = SystemUsageSerializer(data=data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

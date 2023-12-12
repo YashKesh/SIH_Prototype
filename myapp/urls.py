@@ -25,4 +25,6 @@ urlpatterns = [
     path("windows_license/",views.windows_info,name="windowslic"),
     path('custom_license',views.upload_csv,name="custom_license"),
     path('custom_license_update',views.custom_license_update,name="custom_license_update"),
+    path('receive_windows_information/', views.receive_windows_information, name='receive_windows_information'),
+    path('receive_system_usage/', views.receive_system_usage, name='receive_system_usage'),
 ]
