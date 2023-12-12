@@ -1,11 +1,11 @@
 
 from rest_framework import serializers
-from .models import LicenseData
+from .models import WindowsInformation
 
 
 class WindowsInformationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LicenseData
+        model = WindowsInformation
         fields = '__all__'
         
 from rest_framework import serializers

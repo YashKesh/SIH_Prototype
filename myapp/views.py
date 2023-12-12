@@ -360,7 +360,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 # from .models import WindowsInformation
-from .models import LicenseData
+from .models import WindowsInformation
 from .serializers import WindowsInformationSerializer
 @api_view(['POST'])
 def receive_windows_information(request):
@@ -370,15 +370,17 @@ def receive_windows_information(request):
     if serializer.is_valid():
         # Try to get an existing entry by product key
         try:
-            windows_info = LicenseData.objects.get(product_key=data['product_key'])
+            windows_info = WindowsInformation.objects.get(product_key=data['product_key'])
             serializer = WindowsInformationSerializer(windows_info, data=data)
-        except LicenseData.DoesNotExist:
+        except WindowsInformation.DoesNotExist:
             pass  # No existing entry, create a new one
 
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(f"Serializer Errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    print(f"Serializer Errors: {serializer.errors}")
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -403,3 +405,26 @@ def receive_system_usage(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+#license data display
+
+from django.shortcuts import render
+from django.utils import timezone
+from .models import LicenseData
+
+def license_data_view(request):
+    license_data = LicenseData.objects.all()
+
+    for data in license_data:
+        if data.license_expiration_date is not None:
+            remaining_days = (data.license_expiration_date - timezone.now()).days
+            data.status = f"{remaining_days} days remaining" if remaining_days > 0 else "Past Due"
+        else:
+            data.status = "N/A"
+
+    return render(request, 'license_data.html', {'license_data': license_data})
+
+##

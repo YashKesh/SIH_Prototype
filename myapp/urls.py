@@ -27,4 +27,5 @@ urlpatterns = [
     path('custom_license_update',views.custom_license_update,name="custom_license_update"),
     path('receive_windows_information/', views.receive_windows_information, name='receive_windows_information'),
     path('receive_system_usage/', views.receive_system_usage, name='receive_system_usage'),
+    path('license_data/', views.license_data_view, name='license_data'),
 ]

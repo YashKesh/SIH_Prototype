@@ -2,8 +2,9 @@ import requests
 import wmi
 from datetime import datetime, timedelta
 import traceback
-import pythoncom 
+import pythoncom
 import time
+
 class WindowsInformation:
     def __init__(self, product_key, expiration_date, mac_address, ip_address, hostname, windows_version):
         self.product_key = product_key
@@ -13,9 +14,9 @@ class WindowsInformation:
         self.hostname = hostname
         self.windows_version = windows_version
 
-def send_data_to_django(windows_info):
+def send_windows_information_to_api(windows_info):
     try:
-        url = 'http://127.0.0.1:8000//api/receive_windows_information/'  # Replace with your Django server IP
+        url = 'http://127.0.0.1:8000/api/receive_windows_information/'  # Replace with your API endpoint
 
         # Convert WindowsInformation object to a dictionary for serialization
         windows_info_dict = {
@@ -27,19 +28,19 @@ def send_data_to_django(windows_info):
             'windows_version': windows_info.windows_version,
         }
 
-        # Send the data to Django server
-        response = requests.post(url, data=windows_info_dict)
+        # Send the data to your API with the content type set to JSON
+        response = requests.post(url, json=windows_info_dict, headers={'Content-Type': 'application/json'})
         response.raise_for_status()
-        print("Data sent to Django server successfully")
+        print("Data sent to API successfully")
 
     except Exception as e:
-        print(f"Error in send_data_to_django: {e}")
+        print(f"Error in send_windows_information_to_api: {e}")
         traceback.print_exc()
 
 def get_windows_information():
     try:
-        # ... (unchanged code)
-        pythoncom.CoInitialize()  # Add this line
+        # Initialize COM
+        pythoncom.CoInitialize()
 
         wmi_obj = wmi.WMI()
 
@@ -81,6 +82,8 @@ while True:
         print(f"Windows Version: {windows_info.windows_version}")
 
         # Send data to Django server
-        send_data_to_django(windows_info)
-
-    time.sleep(30)  # Sleep for 5 minutes before the next iteration
+        send_windows_information_to_api(windows_info)
+    else:
+        print("Failed to fetch Windows information.")
+    # Sleep for a certain interval (e.g., 30 seconds) before the next iteration
+    time.sleep(30)

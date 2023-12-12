@@ -19,7 +19,7 @@ class WindowsInformation(models.Model):
     ip_address = models.GenericIPAddressField()
     hostname = models.CharField(max_length=255)
     windows_version = models.CharField(max_length=255)
-    
+        
 class SystemUsage(models.Model):
     product_key = models.CharField(max_length=255, unique=True)
     cpu_usage = models.FloatField()
