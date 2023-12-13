@@ -28,3 +28,28 @@ class SystemUsage(models.Model):
     unused_ram = models.FloatField()
     diskempty = models.FloatField()
     disk_info = models.FloatField()
+    
+# models.py
+from django.db import models
+from django.utils import timezone
+
+class SystemStatus(models.Model):
+    timestamp = models.DateTimeField(auto_now=True)  # Update timestamp on every save
+    cpu_usage = models.FloatField()
+    ram_usage = models.FloatField()
+    disk_usage = models.FloatField()
+    mac_address = models.CharField(max_length=17, unique=True)
+    ip_address = models.GenericIPAddressField()
+    hostname = models.CharField(max_length=255)
+    network_usage = models.FloatField()
+    defender_status = models.BooleanField()
+    firewall_status = models.BooleanField()
+    auto_updates_status = models.BooleanField()
+
+    def save(self, *args, **kwargs):
+        # Update the timestamp before saving
+        self.timestamp = timezone.now()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.timestamp} - {self.hostname}"

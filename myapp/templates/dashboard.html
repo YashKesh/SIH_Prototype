@@ -288,23 +288,32 @@ h4{
           display: false // Hide the legend
         },
         plugins: {
-          doughnutLabel :{
-            labels : [
-            {
-              text : "the title",
-              font :{
-                size : '60'
+          doughnutLabel: {
+            labels: [
+              {
+                text: "the title",
+                font: {
+                  size: '60'
+                }
               }
-            }
             ]
           },
           legend: {
-            display: false     // Hide the legend
+            display: false // Hide the legend
           },
         },
-        
+        elements: {
+          arc: {
+            borderWidth: 0, // Set the border width to 0 to hide it
+          },
+        },
+        shadowColor: 'rgba(37, 37, 37, 0.127)', // Shadow color
+        shadowBlur: 10, // Shadow blur radius
+        shadowOffsetX: 5, // Shadow horizontal offset
+        shadowOffsetY: 5, // Shadow vertical offset
       },
     });
+    
 
     var chrt1 = document.getElementById("chartId").getContext("2d");
     var chartId1 = new Chart(chrt1, {

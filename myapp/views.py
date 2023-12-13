@@ -428,3 +428,36 @@ def license_data_view(request):
     return render(request, 'license_data.html', {'license_data': license_data})
 
 ##
+
+
+from .serializers import SystemStatusSerializer
+from .models import SystemStatus
+## security Status view api 
+@api_view(['POST'])
+def receive_system_status(request):
+    try:
+        # Check if the MAC address exists in the database
+        mac_address = request.data.get('mac_address')
+        system_status = SystemStatus.objects.get(mac_address=mac_address)
+        serializer = SystemStatusSerializer(system_status, data=request.data)
+    except SystemStatus.DoesNotExist:
+        # If the MAC address does not exist, create a new record
+        serializer = SystemStatusSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# api data display on the UI
+from .models import SystemStatus    
+def system_status_view(request):
+    system_status_data = SystemStatus.objects.all()  # You might want to add ordering or filtering here
+    for status in system_status_data:
+        timing = round(( timezone.now() - status.timestamp).total_seconds() / 3600,2)
+        status.last_updated = f"{timing} hours" if timing>1 else "now"
+        status.network_usage = f"{round(status.network_usage, 2)} MB"
+        status.defender_value = "Enabled" if status.defender_status else "Disabled"
+        status.firewall_value = "Enabled" if status.firewall_status else "Disabled"
+        status.auto_update  = "Enabled" if status.auto_updates_status else "Disabled"
+    return render(request, 'system_status_list.html', {'system_status_data': system_status_data})

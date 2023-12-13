@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from .models import WindowsInformation
+from .models import WindowsInformation,SystemStatus
 
 
 class WindowsInformationSerializer(serializers.ModelSerializer):
@@ -14,4 +14,9 @@ from .models import SystemUsage
 class SystemUsageSerializer(serializers.ModelSerializer):
     class Meta:
         model = SystemUsage
+        fields = '__all__'
+
+class SystemStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SystemStatus
         fields = '__all__'

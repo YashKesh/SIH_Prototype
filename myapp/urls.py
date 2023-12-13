@@ -28,4 +28,7 @@ urlpatterns = [
     path('receive_windows_information/', views.receive_windows_information, name='receive_windows_information'),
     path('receive_system_usage/', views.receive_system_usage, name='receive_system_usage'),
     path('license_data/', views.license_data_view, name='license_data'),
+    path('system-status/', views.receive_system_status, name='receive_system_status'),
+    path('system-status_view/', views.system_status_view, name='system_status_view'),
+    # path('update_system_status/', views.update_system_status, name='update_system_status'),
 ]
