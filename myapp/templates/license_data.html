@@ -77,6 +77,12 @@
             padding: 8px;
           }
         }
+        .enabled { color: green;
+          font-weight: 800;
+      }
+      .disabled { color: red;
+          font-weight: 800;
+       }
     </style>
   </head>
   <body>
@@ -102,8 +108,8 @@
         {% for data in license_data %}
         <tr>
           <td>{{ data.windows_product_key }}</td>
-          <td>{{ data.license_expiration_date }}</td>
-          <td>{{ data.status }}</td>
+          <td >{{ data.license_expiration_date }}</td>
+          <td class="{% if status.defender_value == 'Past Due' %}enabled{% else %}disabled{% endif %}">{{ data.status }}</td>
           <td>{{ data.mac_address }}</td>
           <td>{{ data.ip_address }}</td>
           <td>{{ data.hostname }}</td>
