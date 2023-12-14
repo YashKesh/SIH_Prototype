@@ -30,5 +30,6 @@ urlpatterns = [
     path('license_data/', views.license_data_view, name='license_data'),
     path('system-status/', views.receive_system_status, name='receive_system_status'),
     path('system-status_view/', views.system_status_view, name='system_status_view'),
+     path('export_csv/', views.export_csv, name='export_csv'),
     # path('update_system_status/', views.update_system_status, name='update_system_status'),
 ]

@@ -83,6 +83,12 @@
       .disabled { color: red;
           font-weight: 800;
        }
+       .btn{
+        margin-top: 1%;
+        font-size: 1rem;
+        display: inline-block;
+        justify-content: center;
+       }
     </style>
   </head>
   <body>
@@ -119,8 +125,8 @@
       </tbody>
       <!-- ... -->
     </table>
+    <a href="{% url 'export_csv' %}" class="btn btn-primary">Export CSV</a>
     </div></div>
   </body>
 </html>
-
 {% endblock content %}

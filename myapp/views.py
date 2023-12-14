@@ -427,6 +427,36 @@ def license_data_view(request):
 
     return render(request, 'license_data.html', {'license_data': license_data})
 
+### for exporting the data into scv format
+from django.http import HttpResponse
+import csv
+from django.utils import timezone
+def export_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=license_data.csv'
+
+    writer = csv.writer(response)
+    writer.writerow(['Windows Product Key', 'License Expiration Date', 'Remaining Days', 'MAC Address', 'IP Address', 'Hostname', 'Windows Version'])
+
+    license_data = LicenseData.objects.all()
+
+    for data in license_data:
+        remaining_days = (data.license_expiration_date - timezone.now()).days if data.license_expiration_date else None
+        status = f"{remaining_days} days remaining" if remaining_days and remaining_days > 0 else "Past Due"
+
+        writer.writerow([
+            data.windows_product_key,
+            str(data.license_expiration_date) if data.license_expiration_date else '',
+            status,
+            data.mac_address,
+            str(data.ip_address),
+            data.hostname,
+            data.windows_version,
+        ])
+
+    return response
+
+
 ##
 
 
