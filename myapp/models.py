@@ -53,3 +53,16 @@ class SystemStatus(models.Model):
 
     def __str__(self):
         return f"{self.timestamp} - {self.hostname}"
+    
+    
+## firewall models
+from django.db import models
+
+# models.py
+class Firewall(models.Model):
+    name = models.CharField(max_length=100)
+    ip = models.GenericIPAddressField()
+    port = models.IntegerField()
+    location = models.CharField(max_length=100)
+    description = models.TextField()
+    link = models.URLField()

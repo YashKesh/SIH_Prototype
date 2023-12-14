@@ -32,4 +32,9 @@ urlpatterns = [
     path('system-status_view/', views.system_status_view, name='system_status_view'),
      path('export_csv/', views.export_csv, name='export_csv'),
     # path('update_system_status/', views.update_system_status, name='update_system_status'),
+    #firewall path
+    path('create/', views.firewall_create, name='firewall_create'),
+    path('list/', views.firewall_list, name='firewall_list'),
+    path('<int:pk>/edit/', views.firewall_edit, name='firewall_edit'),
+    path('<int:pk>/delete/', views.firewall_delete, name='firewall_delete'),
 ]

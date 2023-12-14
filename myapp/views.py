@@ -11,7 +11,7 @@ import time
 from tabulate import tabulate
 import win32api
 import time
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from .utils import get_installed_apps
 from .windows_lic import get_windows_information
 import csv
@@ -491,3 +491,92 @@ def system_status_view(request):
         status.firewall_value = "Enabled" if status.firewall_status else "Disabled"
         status.auto_update  = "Enabled" if status.auto_updates_status else "Disabled"
     return render(request, 'system_status_list.html', {'system_status_data': system_status_data})
+
+
+
+### Custom firewall view 
+from django.http import HttpResponse
+from django.shortcuts import render
+from .models import Firewall
+import xlwt
+
+def firewall_list(request):
+    firewalls = Firewall.objects.all()
+
+    if 'export_excel' in request.GET:
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="firewalls.xls"'
+
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Firewalls')
+
+        # Write headers
+        row_num = 0
+        columns = ['Name', 'IP', 'Port', 'Location', 'Description', 'Link']
+        for col_num, column_title in enumerate(columns):
+            ws.write(row_num, col_num, column_title)
+
+        # Write data
+        for firewall in firewalls:
+            row_num += 1
+            ws.write(row_num, 0, firewall.name)
+            ws.write(row_num, 1, firewall.ip)
+            ws.write(row_num, 2, firewall.port)
+            ws.write(row_num, 3, firewall.location)
+            ws.write(row_num, 4, firewall.description)
+            ws.write(row_num, 5, firewall.link)
+
+        wb.save(response)
+        return response
+
+    return render(request, 'firewall_list.html', {'firewalls': firewalls})
+
+# views.py
+from django.shortcuts import render, redirect
+from .forms import FirewallForm
+from .models import Firewall
+
+def firewall_create(request):
+    if request.method == 'POST':
+        form = FirewallForm(request.POST)
+        if form.is_valid():
+            # Get the form data
+            firewall_instance = form.save(commit=False)
+
+            # Generate the link using the provided logic
+            firewall_instance.link = f"https://{firewall_instance.ip}:{firewall_instance.port}"
+
+            # Save the updated instance to the database
+            firewall_instance.save()
+
+            return redirect('firewall_list')
+
+    else:
+        form = FirewallForm()
+
+    return render(request, 'firewall_create.html', {'form': form})
+
+
+def firewall_edit(request, pk):
+    firewall = get_object_or_404(Firewall, pk=pk)
+
+    if request.method == 'POST':
+        form = FirewallForm(request.POST, instance=firewall)
+        if form.is_valid():
+            form.save()
+            return redirect('firewall_list')
+    else:
+        form = FirewallForm(instance=firewall)
+
+    return render(request, 'firewall_edit.html', {'form': form, 'firewall': firewall})
+
+def firewall_delete(request, pk):
+    firewall = get_object_or_404(Firewall, pk=pk)
+    
+    if request.method == 'POST':
+        firewall.delete()
+        return redirect('firewall_list')
+
+    return render(request, 'firewall_delete.html', {'firewall': firewall})
+
+####

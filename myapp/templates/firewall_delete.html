@@ -1,0 +1,79 @@
+<!-- firewall_delete.html -->
+{% extends 'main.html' %}
+{% block content %}
+    <title>Delete Firewall</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+          }
+          .dashhead{
+            margin-top: 0.5%;
+            background-color: #4B49AC;
+            color: #ffff;
+            padding:1rem;
+            border-radius: 1rem 1rem 0rem 0rem;
+            font-family: 'Roboto', sans-serif;
+            width: 99%;
+            margin-left: 1%;
+            }
+          .main{
+            background-color: #dde3fd;
+            height: 100vh;
+            margin-left: 1%;
+          }
+      form {
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+      }
+      p {
+        margin-bottom: 20px;
+        font-size: 1.3rem;
+        font-family: 'Roboto', sans-serif;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 2rem;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #d9534f; /* Red color for delete action */
+        color: #fff;
+        border: none;
+        font-size: large;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #c9302c; /* Darker red on hover */
+      }
+      .backtopage{
+        margin-top: 2%;
+        background-color: rgb(27, 151, 27);
+        border: 1px solid rgb(27, 151, 27);
+      }
+      .backtopage:hover{
+        background-color: rgb(0, 134, 0);
+        border: 1px solid rgb(27, 151, 27);
+      }
+    </style>
+  <body>
+    <div class="main overflow-auto">
+        <div class="content">
+        <div class="h3 dashhead fs-30 ">Delete Firewall</div>
+    <form method="post" action="">
+      {% csrf_token %}
+      <p>Are you sure you want to delete {{ firewall.name }}?</p>
+      <button type="submit">Yes, delete</button>
+      <button class="backtopage" onclick="window.location.href='{% url 'firewall_list' %}'" type="button">Back to Firewall List</button>
+    </form>
+  
+    </div>
+    </div>
+  </body>
+{% endblock content %}
