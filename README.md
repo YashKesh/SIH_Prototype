@@ -12,7 +12,7 @@ After the installation of of the requirements make the migrations and migrate th
 
 Now the application is ready to run 
 
-`python manage.py runserver`
+`python manage.py runserver 0.0.0.0:8000 `
 
 the application will be running on the local host on the browser
 
