@@ -113,9 +113,9 @@
       <tbody>
         {% for data in license_data %}
         <tr>
-          <td>{{ data.windows_product_key }}</td>
-          <td >{{ data.license_expiration_date }}</td>
-          <td class="{% if status.defender_value == 'Past Due' %}enabled{% else %}disabled{% endif %}">{{ data.status }}</td>
+          <td>{{ data.product_key }}</td>
+          <td >{{ data.expiration_date }}</td>
+          <td class="{% if data.status == 'Past Due' %}disabled{% else %}enabled  {% endif %}">{{ data.status }}</td>
           <td>{{ data.mac_address }}</td>
           <td>{{ data.ip_address }}</td>
           <td>{{ data.hostname }}</td>

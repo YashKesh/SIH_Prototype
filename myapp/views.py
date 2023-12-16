@@ -413,14 +413,14 @@ def receive_system_usage(request):
 
 from django.shortcuts import render
 from django.utils import timezone
-from .models import LicenseData
+from .models import WindowsInformation
 
 def license_data_view(request):
-    license_data = LicenseData.objects.all()
+    license_data = WindowsInformation.objects.all()
 
     for data in license_data:
-        if data.license_expiration_date is not None:
-            remaining_days = (data.license_expiration_date - timezone.now()).days
+        if data.expiration_date is not None:
+            remaining_days = (data.expiration_date - timezone.now()).days
             data.status = f"{remaining_days} days remaining" if remaining_days > 0 else "Past Due"
         else:
             data.status = "N/A"
