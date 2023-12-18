@@ -194,11 +194,41 @@ def dashboard_system_info(request):
 #     installed_apps = get_installed_apps()
 #     context = {'installed_apps': installed_apps}
 #     return render(request, 'installed_apps.html', context)
+##
+# views.py
+from django.shortcuts import render
+from .models import InstalledApp
+from .utils import get_installed_apps  # Assuming you have a get_installed_apps function
 
 def installed_apps(request):
     program_files_path = r'C:\Program Files'
-    installed_apps = get_installed_apps(program_files_path)
-    return render(request, 'installed_apps.html', {'installed_apps': installed_apps})
+    installed_apps_data = get_installed_apps(program_files_path)
+    pythoncom.CoInitialize()
+    wmi_obj = wmi.WMI()
+    network_adapters = wmi_obj.Win32_NetworkAdapterConfiguration(IPEnabled=True)
+    if network_adapters:
+        mac_address = network_adapters[0].MACAddress
+        ip_address = network_adapters[0].IPAddress[0]
+    else:
+        mac_address = "N/A"
+        ip_address = "N/A"
+    
+    # Assuming you have access to the MAC address in the request (you might need to adjust this)
+    for app_data in installed_apps_data:
+        InstalledApp.objects.create(
+            name=app_data['Name'],
+            publisher=app_data['Publisher'],
+            version=app_data['Version'],
+            mac_address=mac_address,
+        )
+
+    return render(request, 'installed_apps.html', {'installed_apps': installed_apps_data})
+
+##
+# def installed_apps(request):
+#     program_files_path = r'C:\Program Files'
+#     installed_apps = get_installed_apps(program_files_path)
+#     return render(request, 'installed_apps.html', {'installed_apps': installed_apps})
 
 
 
@@ -486,10 +516,17 @@ def system_status_view(request):
     for status in system_status_data:
         timing = round(( timezone.now() - status.timestamp).total_seconds() / 3600,2)
         status.last_updated = f"{timing} hours" if timing>1 else "now"
+        status.status = "Online" if timing<1 else "Offline"
         status.network_usage = f"{round(status.network_usage, 2)} MB"
         status.defender_value = "Enabled" if status.defender_status else "Disabled"
         status.firewall_value = "Enabled" if status.firewall_status else "Disabled"
         status.auto_update  = "Enabled" if status.auto_updates_status else "Disabled"
+        if status.cpu_usage*100 > 80 and status.ram_usage>80:
+            status.condition  = "Critical"
+        elif status.cpu_usage*100>50 and status.ram_usage>50:
+            status.condition = "High"
+        else:
+            status.condition = "Clear"
     return render(request, 'system_status_list.html', {'system_status_data': system_status_data})
 
 
@@ -580,3 +617,38 @@ def firewall_delete(request, pk):
     return render(request, 'firewall_delete.html', {'firewall': firewall})
 
 ####
+
+
+## clickable eventn 
+# views.py
+# from django.shortcuts import render, get_object_or_404
+# from .models import SystemStatus
+
+# def device_detail(request, mac_address):
+#     system_status = get_object_or_404(SystemStatus, mac_address=mac_address)
+#     return render(request, 'device_detail.html', {'system_status': system_status})
+
+from django.shortcuts import render, get_object_or_404
+from .models import SystemStatus, InstalledApp
+
+def device_detail(request, mac_address):
+    system_status = get_object_or_404(SystemStatus, mac_address=mac_address)
+    
+    system_status.defender_value = "Enabled" if system_status.defender_status else "Disabled"
+    system_status.firewall_value = "Enabled" if system_status.firewall_status else "Disabled"
+    system_status.auto_update  = "Enabled" if system_status.auto_updates_status else "Disabled"
+    if system_status.cpu_usage*100 > 80 and system_status.ram_usage>80:
+        system_status.condition  = "Critical"
+    elif system_status.cpu_usage*100>50 and system_status.ram_usage>50:
+        system_status.condition = "High"
+    else:
+        system_status.condition = "Clear"
+    # Query installed apps based on the mac_address
+    installed_apps = InstalledApp.objects.filter(mac_address=mac_address)
+    
+    return render(request, 'device_detail.html', {'system_status': system_status, 'installed_apps': installed_apps})
+
+
+
+
+

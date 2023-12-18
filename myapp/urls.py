@@ -37,4 +37,5 @@ urlpatterns = [
     path('list/', views.firewall_list, name='firewall_list'),
     path('<int:pk>/edit/', views.firewall_edit, name='firewall_edit'),
     path('<int:pk>/delete/', views.firewall_delete, name='firewall_delete'),
+    path('device_detail/<str:mac_address>/', views.device_detail, name='device_detail'),
 ]

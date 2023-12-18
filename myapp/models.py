@@ -54,7 +54,22 @@ class SystemStatus(models.Model):
     def __str__(self):
         return f"{self.timestamp} - {self.hostname}"
     
-    
+## installed applications 
+# models.py
+
+# models.py
+from django.db import models
+
+class InstalledApp(models.Model):
+    name = models.CharField(max_length=255)
+    publisher = models.CharField(max_length=255,null = True)
+    version = models.CharField(max_length=50)
+    mac_address = models.CharField(max_length=17)  # Assuming MAC address is stored as a string
+
+    def __str__(self):
+        return self.name
+
+## end of the installed
 ## firewall models
 from django.db import models
 
