@@ -40,4 +40,6 @@ urlpatterns = [
     path('device_detail/<str:mac_address>/', views.device_detail, name='device_detail'),
     path('monitoring-data/', views.monitoring_data_view, name='monitoring_data'),
     path('linux_detail/<str:mac_address>/', views.linux_detail, name='linux_detail'),
+    path('router/',views.routerview,name='router'),
+     path('router_detail/<str:Name>/', views.router_detail, name='router_detail'),
 ]

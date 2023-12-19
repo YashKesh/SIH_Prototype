@@ -337,13 +337,13 @@
           <li class="nav-item">
             <a class="nav-link"  href="#devices"  data-toggle="collapse"  aria-expanded="false" aria-controls="tables">
               <i class="icon-bar-graph menu-icon"></i>
-              <span class="menu-title">Physical Devices</span>
+              <span class="menu-title">Physical Servers</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="devices">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{% url 'system_status_view' %}">Windows devices</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'monitoring_data' %}">Linux Devices</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'system_status_view' %}">Windows Servers</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'monitoring_data' %}">Linux Servers</a></li>
               </ul>
             </div>
           </li>
@@ -361,16 +361,11 @@
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
+            <a class="nav-link"  href="{% url 'router' %}" >
               <i class="icon-contract menu-icon"></i>
-              <span class="menu-title">Icons</span>
+              <span class="menu-title">Router Management</span>
               
             </a>
-            <div class="collapse" id="icons">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Mdi icons</a></li>
-              </ul>
-            </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">

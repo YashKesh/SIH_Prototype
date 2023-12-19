@@ -103,3 +103,25 @@ class MonitoringData(models.Model):
 
     def __str__(self):
         return f"MonitoringData - {self.timestamp}"
+    
+####
+### router db 
+# models.py
+from django.db import models
+
+class Router(models.Model):
+    Name = models.CharField(max_length=255,default = None)
+    IP_address = models.GenericIPAddressField()
+    router_type = models.CharField(max_length=255)
+    port = models.PositiveIntegerField(default = 0000)
+    category = models.CharField(max_length=255)
+    vendor = models.CharField(max_length=255)
+    poll_using = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
+
+    def __str__(self):
+        return f"{self.vendor} Router ({self.IP_address})"
+    
+    
+### end of router db ###

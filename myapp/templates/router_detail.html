@@ -1,0 +1,75 @@
+{% extends 'main.html' %}
+{% block content %}
+<head>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+          }
+          .dashhead{
+            margin-top: 0.5%;
+            background-color: #4B49AC;
+            color: #ffff;
+            padding: 2rem;
+            border-radius: 1rem 1rem 0rem 0rem;
+            font-family: 'Roboto', sans-serif;
+            }
+          .main{
+            background-color: #dde3fd;
+            height: 100vh;
+            margin-left: 1%;
+          }
+          .content{
+            margin-left: 1%;
+          }
+          ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+    
+        li {
+            margin-bottom: 5%;
+            font-size: medium;
+            margin-top: 2%;
+            display: flex;
+            justify-content: space-between;
+            margin-left: 2%;
+            margin-right: 2%;
+        }
+    
+        .label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .card{
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main overflow-auto">
+        <div class="content">
+            <div class="h3 dashhead fs-30 ">Router Details</div> 
+            <div class="card">
+            <ul>
+                <li><span class="label">Name:</span> {{ system_status.Name }}</li>
+                <li><span class="label">IP Address:</span> {{ system_status.IP_address }}</li>
+                <li><span class="label">Type:</span> {{ system_status.router_type }}</li>
+                <li><span class="label">Port:</span> {{ system_status.port }}</li>
+                <li><span class="label">Category:</span> {{ system_status.category }}</li>
+                <li><span class="label">Vendor:</span> {{ system_status.vendor }}</li>
+                <li><span class="label">Poll using:</span> {{ system_status.poll_using }}</li>
+                <li><span class="label">Link to Router:</span><a href="{{ system_status.link }}" target="_blank">{{ system_status.link }}</a> </li>
+                <!-- Include other details as needed -->
+            </ul>
+        </div>
+        </div>
+    </div> 
+</body>
+
+{% endblock content %}

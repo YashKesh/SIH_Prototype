@@ -720,3 +720,20 @@ def linux_detail(request, mac_address):
     return render(request, 'linux_detail.html', context)
 
 
+### Router code 
+# views.py
+from django.views.generic import ListView
+from .models import Router
+
+def routerview(request):
+    router_data = Router.objects.all()
+    context = {'router_data':router_data}
+    return render(request,'router.html',context)
+
+
+
+def router_detail(request, Name):
+    system_status = get_object_or_404(Router, Name=Name)
+    system_status.link = f"http://{system_status.IP_address}:{system_status.port}"
+    return render(request, 'router_detail.html', {'system_status': system_status})
+

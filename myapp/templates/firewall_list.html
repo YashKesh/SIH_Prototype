@@ -148,9 +148,12 @@
           <td>{{ firewall.location }}</td>
           <td>{{ firewall.description }}</td>
           <td>
-            <a href="{{ firewall.link }}" target="_blank"
-              >{{ firewall.link }}</a
+            <button
+              class="button-login button-edit btn btn-primary"
+              onclick="window.open('{{ firewall.link }}', '_blank')"
             >
+              Login
+            </button>
           </td>
           <td>
             <a
