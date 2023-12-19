@@ -182,6 +182,12 @@
             justify-content: space-around;
             margin-top: 5%;
           }
+          .cardrow{
+            display: flex;
+          }
+          .transparent{
+            width: 50%;
+          }
     </style>
 </head>
 <body>
@@ -210,14 +216,24 @@
             </div>
             <div class="card">
             <h2>Statistical Info</h2>
-            <div class="col-md-6 mb-4 mt-3 ml-5 stretch-card transparent">
+            <div class="row cardrow">
+            <div class="col-md-6 mb-4 mt-3 ml-5 stretch-card transparent" style="width: 2rem;">
                 <div class="card card-dark-blue">
                   <div class="card-body">
-                    <p class="mb-4">Total Network Usage</p>
-                    <p class="fs-30 mb-2">{{system_status.network_usage}}MB</p>
+                    <p class="mb-4">Total Data sent</p>
+                    <p class="fs-30 mb-2">{{monitoring_data.sent_mb|floatformat:"2"}}MB</p>
                   </div>
                 </div>
               </div>
+              <div class="col-md-6 mb-4 mt-3 ml-5 stretch-card transparent">
+                <div class="card card-dark-blue">
+                  <div class="card-body">
+                    <p class="mb-4">Total Data received</p>
+                    <p class="fs-30 mb-2">{{monitoring_data.received_mb|floatformat:"2"}}MB</p>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="graphcard">
                 <div id="container" style="width: 11rem; height: 200px;"></div>
                 <div id="container1" style="width: 11rem; height: 200px;"></div>
@@ -309,7 +325,7 @@
 <script>
     //the first graph
     anychart.onDocumentReady(function () {
-      var cpuUsageData = "{{ system_status.cpu_usage}}";  // Retrieve CPU usage from the context
+      var cpuUsageData = "{{ monitoring_data.cpu_usage}}";  // Retrieve CPU usage from the context
 
       // Create pie chart with CPU usage data
       var chart = anychart.pie([
@@ -370,7 +386,7 @@
     /// end of first graph
     ///start of the second graph
     anychart.onDocumentReady(function () {
-        var cpuUsageData = "{{ system_status.ram_usage}}";  // Retrieve CPU usage from the context
+        var cpuUsageData = "{{ monitoring_data.ram_usage}}";  // Retrieve CPU usage from the context
   
         // Create pie chart with CPU usage data
         var chart = anychart.pie([
@@ -431,7 +447,7 @@
       ///end of the second graph
       ///start of the third graph
       anychart.onDocumentReady(function () {
-        var cpuUsageData = "{{ system_status.disk_usage}}";  // Retrieve CPU usage from the context
+        var cpuUsageData = "{{ monitoring_data.disk_usage}}";  // Retrieve CPU usage from the context
   
         // Create pie chart with CPU usage data
         var chart = anychart.pie([

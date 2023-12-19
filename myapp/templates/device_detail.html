@@ -182,6 +182,14 @@
             justify-content: space-around;
             margin-top: 5%;
           }
+          
+          .card-light-blue {
+            margin-top: 20px;
+            background-color: #87C4FF;
+          }
+          
+
+
     </style>
 </head>
 <body>
@@ -224,21 +232,26 @@
             </div>
             <div class="card">
             <h2>Statistical Info</h2>
-            <div class="col-md-6 mb-4 mt-3 ml-5 stretch-card transparent">
-                <div class="card card-dark-blue">
-                  <div class="card-body">
-                    <p class="mb-4">Total Network Usage</p>
-                    <p class="fs-30 mb-2">{{system_status.network_usage}}MB</p>
-                  </div>
-                </div>
-              </div>
+            
             <div class="graphcard">
                 <div id="container" style="width: 11rem; height: 200px;"></div>
                 <div id="container1" style="width: 11rem; height: 200px;"></div>
             </div>
             <div class="graphcard">
                 <div id="container2" style="width: 11rem; height: 200px;"></div>
-                <div id="container3" style="width: 11rem; height: 200px;"></div>
+                <div id="container3" style="width: 15rem; height: 200px;">
+                
+                  <div class="stretch-card transparent">
+                    <div class="card card-light-blue"> <!-- Change the class to card-light-blue -->
+                      <div class="card-body">
+                        <p class="mb-4">Total Network Usage</p>
+                        <p class="fs-30 mb-2">{{system_status.network_usage}}MB</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                
+                </div>
             </div>
             </div>
             </div>
@@ -289,7 +302,7 @@
         }
 
         document.getElementById(sectionId).classList.add('active');
-        document.querySelector(`[onclick="toggleSection('${sectionId}')]`).classList.add('active');
+        document.querySelector([onclick="toggleSection('${sectionId}')]).classList.add('active');
     }
 </script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -334,8 +347,8 @@
       // Create palette
       var palette = anychart.palettes.distinctColors();
       palette.items([
-        { color: '#7d9db6' },
-        { color: '#EFEFEF' }  // Use a neutral color for the "Free" portion
+        { color: '#52D3D8' },
+        { color: '#3887BE' }  // Use a neutral color for the "Free" portion
       ]);
 
       // Set chart radius and innerRadius to control the size of the chart
@@ -349,7 +362,7 @@
       // Set outline settings
       chart
         .outline()
-        .width('3%')
+        .width(0)
         .fill(function () {
           return anychart.color.darken(this.sourceColor, 0.25);
         });
@@ -395,9 +408,9 @@
         // Create palette
         var palette = anychart.palettes.distinctColors();
         palette.items([
-          { color: '#A367B1' },
-          { color: '#EFEFEF' }  // Use a neutral color for the "Free" portion
-        ]);
+        { color: '#52D3D8' },
+        { color: '#3887BE' }  // Use a neutral color for the "Free" portion
+      ]);
   
         // Set chart radius and innerRadius to control the size of the chart
         chart
@@ -410,7 +423,7 @@
         // Set outline settings
         chart
           .outline()
-          .width('3%')
+          .width(0)
           .fill(function () {
             return anychart.color.darken(this.sourceColor, 0.25);
           });
@@ -448,7 +461,7 @@
         var cpuUsageData = "{{ system_status.disk_usage}}";  // Retrieve CPU usage from the context
   
         // Create pie chart with CPU usage data
-        var chart = anychart.pie([
+        var chart = anychart.pie([  
           ['Used', cpuUsageData],
           ['Free', 100 - cpuUsageData]
         ]);
@@ -456,9 +469,9 @@
         // Create palette
         var palette = anychart.palettes.distinctColors();
         palette.items([
-          { color: '#B80000' },
-          { color: '#EFEFEF' }  // Use a neutral color for the "Free" portion
-        ]);
+        { color: '#52D3D8' },
+        { color: '#3887BE' }  // Use a neutral color for the "Free" portion
+      ]);
   
         // Set chart radius and innerRadius to control the size of the chart
         chart
@@ -471,7 +484,7 @@
         // Set outline settings
         chart
           .outline()
-          .width('3%')
+          .width(0)
           .fill(function () {
             return anychart.color.darken(this.sourceColor, 0.25);
           });

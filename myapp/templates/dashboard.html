@@ -107,6 +107,9 @@ h4{
 .plotly{
   width: 70%;
 }
+.card-dark-blue{
+  width: 20%;
+}
 </style>
 
 <head>
@@ -165,6 +168,35 @@ h4{
       </div>
     </div>
   </div>
+  <!-- The third row in between  -->
+  <div class="row third">
+    <div class="col-md-6 mb-4 stretch-card transparent">
+      <div class="card card-dark-blue">
+        <div class="card-body">
+          <p class="mb-4">Total Number of Devices</p>
+          <p class="fs-30 mb-2">{{data.total_devices}}</p>
+          <p>Both windows and linux</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4 stretch-card transparent">
+      <div class="card card-dark-blue">
+        <div class="card-body">
+          <p class="mb-4">Number of Windows Devices</p>
+          <p class="fs-30 mb-2">{{data.total_system_status_entries}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4 stretch-card transparent">
+      <div class="card card-dark-blue">
+        <div class="card-body">
+          <p class="mb-4">Number of Linux Devices</p>
+          <p class="fs-30 mb-2">{{data.total_monitoring_data_entries}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end of the third row -->
   <div class="row second">
     <div class="card security barchart second-chart">
       <div class="card-body ">
@@ -175,13 +207,14 @@ h4{
     </div>
     <div class="card gaugedisplay second-chart">
       <div class="card-body">
-        <h4 class="card-title">Global Compliance</h4>
-        <div class="share">
-            <div id='myDiv' class="myDiv"></div>  
-         <!--in the above the span the live incident count needs to be displayed for now it is static  -->
-        </div>
+          <h4 class="card-title">Windows Server condition</h4>
+          <div class="share">
+              
+                  <canvas id="lineChart"></canvas>
+              
+          </div>
       </div>
-    </div>
+  </div>
   </div>
   <div class="row">
   </div>
@@ -193,35 +226,38 @@ h4{
   <script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>
 
   <script>
-    //new doughnut chart code trial
-    var data = [
-    {
-      domain: { x: [0, 1], y: [0, 1] },
-      value: 63,
-      title: { text: "" },
-      type: "indicator",
-      mode: "gauge+number+delta",
-      delta: { reference: 34 },
-      gauge: {
-        axis: { range: [null, 100] },
-        bar: { color: "lightgreen" },
-        steps: [
-          { range: [0, 100], color: "white" },
-         
-        ],
-        bordercolor: "lightgreen",
-        threshold: {
-          line: { color: "red", width: 4 },
-          thickness: 0.75,
-          value: 99
+    var numDevicesGreaterThan80 = "{{ data.num_devices_ram_greater_than_80 }}";
+    var numDevicesBetween50And80 = "{{ data.num_devices_ram_between_50_and_80 }}";
+    var numDevicesLessThan50 = "{{ data.num_devices_ram_less_than_50 }}";
+    const lineChart = document.getElementById('lineChart').getContext('2d');
+    const lineChartData = {
+        labels: ['Critical', 'High', 'Clear'],
+        datasets: [{
+            label: 'Count of Servers',
+            data: [numDevicesGreaterThan80, numDevicesBetween50And80, numDevicesLessThan50], // Replace with your dynamic data
+            backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(255, 159, 64, 0.6)', 'rgba(189, 254, 86, 0.6)'],
+            borderColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(189, 254, 86)'],
+            borderWidth: 1,
+            pointBackgroundColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(189, 254, 86)'],
+            fill: false,
+        }],
+    };
+
+    new Chart(lineChart, {
+        type: 'line',
+        data: lineChartData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    precision: 0, // Set precision to 0 to display whole numbers on the y-axis
+                },
+            },
+            // Add options if needed
         },
-        hoverinfo: "all"
-      }
-    }
-  ];
-  var layout = { width: 450, height: 300, margin: { t: 0, b: 0 } ,
-  font: { color: "#4B49AC", family: 'Roboto' }};
-  Plotly.newPlot('myDiv', data, layout);
+    });
+    //new doughnut chart code trial
+
 
 
   

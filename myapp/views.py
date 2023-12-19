@@ -184,10 +184,33 @@ def system_info(request):
     combined_data = {**system_data, **additional_data}
     return render(request, 'sys_info.html', {'data': combined_data})
 
+
+from django.db.models import Avg
 def dashboard_system_info(request):
     system_data = get_system_info()
     additional_data = get_system_usage()
-    combined_data = {**system_data, **additional_data}
+    average_cpu_usage = SystemStatus.objects.aggregate(avg_cpu=Avg('cpu_usage'))['avg_cpu']
+    num_devices_ram_greater_than_80 = SystemStatus.objects.filter(ram_usage__gt=80).count()
+# RAM usage greater than 50 and less than or equal to 80
+    num_devices_ram_between_50_and_80 = SystemStatus.objects.filter(ram_usage__gt=50, ram_usage__lte=80).count()
+# RAM usage less than or equal to 50
+    num_devices_ram_less_than_50 = SystemStatus.objects.filter(ram_usage__lte=50).count()
+    total_system_status_entries = SystemStatus.objects.count()
+
+# Total number of entries in MonitoringData model
+    total_monitoring_data_entries = MonitoringData.objects.count()
+    total_devices = total_system_status_entries + total_monitoring_data_entries
+    combined_data = {
+        **system_data,
+        **additional_data,
+        'average_cpu_usage': average_cpu_usage,
+        'num_devices_ram_greater_than_80': num_devices_ram_greater_than_80,
+        'num_devices_ram_between_50_and_80': num_devices_ram_between_50_and_80,
+        'num_devices_ram_less_than_50': num_devices_ram_less_than_50,
+        'total_system_status_entries' : total_system_status_entries,
+        'total_monitoring_data_entries' : total_monitoring_data_entries,
+        'total_devices':total_devices
+    }
     return render(request, 'dashboard.html', {'data': combined_data})
 
 # def installed_apps_list(request):
