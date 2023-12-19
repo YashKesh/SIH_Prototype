@@ -650,5 +650,29 @@ def device_detail(request, mac_address):
 
 
 
+## linux distribution view 
+from django.shortcuts import render
+from .models import MonitoringData  # Adjust the import based on your app structure
+
+def monitoring_data_view(request):
+    monitoring_data_objects = MonitoringData.objects.all()
+    for status in monitoring_data_objects:
+        timing = round(( timezone.now() - status.timestamp).total_seconds() / 3600,2)
+        status.last_updated = f"{timing} hours" if timing>1 else "now"
+        status.status = "Online" if timing<1 else "Offline"
+        if status.cpu_usage*100 > 80 and status.ram_usage>80:
+            status.condition  = "Critical"
+        elif status.cpu_usage*100>50 and status.ram_usage>50:
+            status.condition = "High"
+        else:
+            status.condition = "Clear"
+    context = {'monitoring_data_objects': monitoring_data_objects}
+    return render(request, 'monitoring_data_linux.html', context)
+
+
+def linux_detail(request, mac_address):
+    monitoring_data = MonitoringData.objects.get(mac_id=mac_address)
+    context = {'monitoring_data': monitoring_data}
+    return render(request, 'linux_detail.html', context)
 
 

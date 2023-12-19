@@ -335,11 +335,17 @@
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link"  href="{% url 'system_status_view' %}" >
+            <a class="nav-link"  href="#devices"  data-toggle="collapse"  aria-expanded="false" aria-controls="tables">
               <i class="icon-bar-graph menu-icon"></i>
               <span class="menu-title">Physical Devices</span>
-             
+              <i class="menu-arrow"></i>
             </a>
+            <div class="collapse" id="devices">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{% url 'system_status_view' %}">Windows devices</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'monitoring_data' %}">Linux Devices</a></li>
+              </ul>
+            </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">

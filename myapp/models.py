@@ -81,3 +81,25 @@ class Firewall(models.Model):
     location = models.CharField(max_length=100)
     description = models.TextField()
     link = models.URLField()
+
+
+
+### linux distribution system 
+# monitor_app/models.py
+from django.db import models
+
+class MonitoringData(models.Model):
+    timestamp = models.DateTimeField()
+    mac_id = models.CharField(max_length=17,unique=True)
+    ip_address = models.CharField(max_length=15)
+    linux_distribution = models.CharField(max_length=255)
+    cpu_usage = models.FloatField()
+    ram_usage = models.FloatField()
+    disk_usage = models.FloatField()
+    sent_mb = models.FloatField()
+    received_mb = models.FloatField()
+    host_name = models.CharField(max_length=255)
+    # Add fields for device location if available
+
+    def __str__(self):
+        return f"MonitoringData - {self.timestamp}"

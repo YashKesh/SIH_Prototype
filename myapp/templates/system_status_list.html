@@ -97,7 +97,7 @@
   <body>
   <div class="main overflow-auto">
     <div class="content">
-    <div class="h3 dashhead fs-30 ">All Physical Devices Montioring</div>
+    <div class="h3 dashhead fs-30 ">Windows Devices Montioring</div>
     <table>
       <thead>
         <tr>
@@ -115,7 +115,7 @@
           <td><a href="{% url 'device_detail' mac_address=status.mac_address %}">{{ status.mac_address }}</a></td>
           <td>{{ status.ip_address }}</td>
           <td>{{ status.hostname }}</td>
-          <td class="{% if status.firewall_value == 'Online' %}enabled{% else %}disabled{% endif %}">{{status.status}}</td>
+          <td class="{% if status.status == 'Online' %}enabled{% else %}disabled{% endif %}">{{status.status}}</td>
           <td>
             {% if status.condition == 'Critical' %}
                 <i class="fas fa-times" style="color: red;"></i> <span class="condition">{{ status.condition }}</span>  <!-- Cross icon in red -->
