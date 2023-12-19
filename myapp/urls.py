@@ -19,7 +19,8 @@ from django.urls import path
 urlpatterns = [
     # path("",views.homepage,name="homepage"),
     path("main/",views.mainhtml,name="mainpage"),
-    path("",views.dashboard_system_info,name="dashboard"),
+    path("",views.dashboard_system_info,name="dashboard_main"),
+    path('dashboard/', views.dashboard, name='dashboard'),
     path("sys_info/",views.system_info,name="sysinformation"),
     path("installed_apps/",views.installed_apps,name="installed_apps"),
     path("windows_license/",views.windows_info,name="windowslic"),
@@ -34,12 +35,18 @@ urlpatterns = [
     # path('update_system_status/', views.update_system_status, name='update_system_status'),
     #firewall path
     path('create/', views.firewall_create, name='firewall_create'),
+    path('create1/', views.firewall_create1, name='firewall_create1'),
     path('list/', views.firewall_list, name='firewall_list'),
+    path('list1/', views.firewall_list1, name='firewall_list1'),
     path('<int:pk>/edit/', views.firewall_edit, name='firewall_edit'),
+    path('<int:pk>/edit1/', views.firewall_edit1, name='firewall_edit1'),
     path('<int:pk>/delete/', views.firewall_delete, name='firewall_delete'),
+    path('<int:pk>/delete1/', views.firewall_delete1, name='firewall_delete1'),
     path('device_detail/<str:mac_address>/', views.device_detail, name='device_detail'),
     path('monitoring-data/', views.monitoring_data_view, name='monitoring_data'),
     path('linux_detail/<str:mac_address>/', views.linux_detail, name='linux_detail'),
     path('router/',views.routerview,name='router'),
      path('router_detail/<str:Name>/', views.router_detail, name='router_detail'),
+      path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'), 
 ]

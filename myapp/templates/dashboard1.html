@@ -1,0 +1,484 @@
+{% extends 'main1.html' %}
+{% block content %}
+{% load static %}
+<style>
+  .main {
+    background-color: #dde3fd;
+    height: 100vh;
+    font-family: 'Roboto', sans-serif;
+  }
+  .doughnut{
+    gap: 2rem;
+  }
+  .header{
+    font-family: 'Roboto', sans-serif;
+    background-color: #4B49AC;
+    color: #ffff;
+    margin-left: 1%;
+    margin-top: 1%;
+    border-radius: 1rem 1rem 0rem 0rem ;
+
+  }
+  .row{
+    gap: 2%;
+  }
+  .header h2{
+    padding: 1rem;
+  }
+  .breaker{
+    margin-left: 1%;
+    border: 1px solid #4B49AC;
+  }
+  .row{
+    margin-left: 2%;
+  }
+  .card {
+    margin-top: 2%;
+    width: 100%;
+    box-shadow: -10px 10px 10px 0px rgba(37, 37, 37, 0.127);
+    box-shadow: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(30px);
+    
+  }
+
+  .canvas-frame {
+    margin-bottom: 3%;
+    
+  }
+
+
+  .share{
+    display: flex;
+  }
+  .information{
+    margin-top: 20%;
+    font-family: 'Roboto', sans-serif;
+    font-size: large;
+    margin-left: 2rem;
+  }
+  .text-muted{
+    font-weight: 400;
+    font-size: large;
+  }
+.data{
+  margin-top: 3rem;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  
+}
+.card .card-title{
+  font-size: large;
+  width: 100%;
+  color: #4B49AC;
+}
+.card-title{
+  margin-left: 5%;
+}
+.security{
+  margin-top: 0%;
+}
+.barchart{
+  width: 40%;
+}
+.break{
+  margin-top: 2%;
+}
+h4{
+  color: #ffff;
+}
+.new-chart{
+  width: 40%;
+  height: 100%;
+  margin-top: 0%;
+}
+.gaugedisplay{
+  width: 40%;
+  margin-top: 0%;
+  height: 70%;
+}
+.myDiv{
+  display: flex;
+  height: 70%;
+  margin-top: 0%;
+}
+.second{
+  gap: 1rem;
+}
+.plotly{
+  width: 70%;
+}
+.card-dark-blue{
+  width: 20%;
+}
+.infocard{
+  width: 30%;
+  justify-content: space-around;
+}
+.third{
+  display: flex;
+  justify-content: space-around;
+}
+.second{
+  justify-content: space-around;
+}
+.online-devices{
+  background-color: #65B741;
+  color: white;
+}
+.offline-devices{
+  background-color: #E36414;
+  color: white;
+}
+</style>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>chart.js</title>
+</head>
+
+<body>
+  <div class="main overflow-auto">
+    <div class="header"><h2>Main Dashboard</h2></div>
+    <hr class="breaker">
+    <div class="row  first doughnut">
+    <div class="grid-margin marginleft">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Ram Usage</h4>
+          <div class="share">
+          <canvas class="canvas-frame" id="chartId" aria-label="chart" height="200" width="200"></canvas>
+          <span class="information">Ram usage <br class="break"><span class="text-muted data">{{data.ram_usage}}%</span></span>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid-margin marginleft">
+      <div class="card">
+        <div class="card-body card1">
+          <h4 class="card-title">Disk Usage Information</h4>
+          <div class="share">
+          <canvas class="canvas-frame" id="chartId1" aria-label="chart" height="200" width="200"></canvas>
+          <span class="information disk">Disk Occupied <br><span class="text-muted data">{{data.disk_info}}%</span></span>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid-margin marginleft">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Incidents Report</h4>
+          <div class="share">
+          <canvas class="canvas-frame" id="chartId2" aria-label="chart" height="200" width="200"></canvas>
+          <span class="information disk">Live Incidents <br><span class="text-muted data">1</span></span>   
+           <!--in the above the span the live incident count needs to be displayed for now it is static  -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid-margin marginleft">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Ram Usage</h4>
+          <div class="share">
+          <canvas class="canvas-frame" id="chartId4" aria-label="chart" height="200" width="200"></canvas>
+          <span class="information">Ram usage <br class="break"><span class="text-muted data">{{data.ram_usage}}%</span></span>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- The new row -->
+  <div class="row third">
+    <div class=" mb-4 stretch-card transparent infocard">
+      <div class="card online-devices">
+        <div class="card-body">
+          <p class="mb-4">Total Number of Online Devices</p>
+          <p class="fs-30 mb-2">{{data.total_online}}</p>
+          <p>Both windows and linux</p>
+        </div>
+      </div>
+    </div>
+    <div class=" mb-4 stretch-card transparent infocard">
+      <div class="card  offline-devices">
+        <div class="card-body">
+          <p class="mb-4">Number of Offline Devices Devices</p>
+          <p class="fs-30 mb-2">{{data.total_offline}}</p>
+          <p>Both windows and linux</p>
+        </div>
+      </div>
+    </div>
+    <div class="mb-4 stretch-card transparent infocard">
+      <div class="card card-dark-blue">
+        <div class="card-body">
+          <p class="mb-4">Number of Mac Devices</p>
+          <p class="fs-30 mb-2">{{data.total_monitoring_data_entries}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- The end of new row -->
+  <!-- The third row in between  -->
+  <div class="row third">
+    <div class=" mb-4 stretch-card transparent infocard">
+      <div class="card card-dark-blue">
+        <div class="card-body">
+          <p class="mb-4">Total Number of Devices</p>
+          <p class="fs-30 mb-2">{{data.total_devices}}</p>
+          <p>Both windows and linux</p>
+        </div>
+      </div>
+    </div>
+    <div class=" mb-4 stretch-card transparent infocard">
+      <div class="card card-dark-blue">
+        <div class="card-body">
+          <p class="mb-4">Number of Windows Devices</p>
+          <p class="fs-30 mb-2">{{data.total_system_status_entries}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="mb-4 stretch-card transparent infocard">
+      <div class="card card-dark-blue">
+        <div class="card-body">
+          <p class="mb-4">Number of Linux Devices</p>
+          <p class="fs-30 mb-2">{{data.total_monitoring_data_entries}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end of the third row -->
+  <div class="row second">
+    <div class="card security barchart second-chart">
+      <div class="card-body ">
+        <h4 class="card-title">Linux Server Conditions</h4>
+           <canvas id="lineChart1"></canvas>
+        <!-- This is also static for now -->
+      </div>
+    </div>
+    <div class="card gaugedisplay second-chart">
+      <div class="card-body">
+          <h4 class="card-title">Windows Server condition</h4>
+          <div class="share">
+              
+                  <canvas id="lineChart"></canvas>
+              
+          </div>
+      </div>
+  </div>
+  </div>
+  <div class="row">
+  </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.1/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="chartjs-plugin-doughnutlabel.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+  <script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>
+
+  <script>
+    var numDevicesGreaterThan80 = "{{ data.num_devices_ram_greater_than_80 }}";
+    var numDevicesBetween50And80 = "{{ data.num_devices_ram_between_50_and_80 }}";
+    var numDevicesLessThan50 = "{{ data.num_devices_ram_less_than_50 }}";
+    const lineChart = document.getElementById('lineChart').getContext('2d');
+    const lineChartData = {
+        labels: ['Critical', 'High', 'Clear'],
+        datasets: [{
+            label: 'Count of Servers',
+            data: [numDevicesGreaterThan80, numDevicesBetween50And80, numDevicesLessThan50], // Replace with your dynamic data
+            backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(255, 159, 64, 0.6)', 'rgba(189, 254, 86, 0.6)'],
+            borderColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(189, 254, 86)'],
+            borderWidth: 1,
+            pointBackgroundColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(189, 254, 86)'],
+            fill: false,
+        }],
+    };
+
+    new Chart(lineChart, {
+        type: 'line',
+        data: lineChartData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    precision: 0, // Set precision to 0 to display whole numbers on the y-axis
+                },
+            },
+            // Add options if needed
+        },
+    });
+    //end off first line chart 
+    //start of the first line chart
+    var DevicesGreaterThan80 = "{{ data.devices_greater_than_80 }}";
+    var DevicesBetween50And80 = "{{ data.devices_between_50_and_80 }}";
+    var DevicesLessThan50 = "{{ data.devices_less_than_50 }}";
+    const lineChart1 = document.getElementById('lineChart1').getContext('2d');
+    const lineChartData1 = {
+        labels: ['Critical', 'High', 'Clear'],
+        datasets: [{
+            label: 'Count of Servers',
+            data: [DevicesGreaterThan80, DevicesBetween50And80, DevicesLessThan50], // Replace with your dynamic data
+            backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(255, 159, 64, 0.6)', 'rgba(189, 254, 86, 0.6)'],
+            borderColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(189, 254, 86)'],
+            borderWidth: 1,
+            pointBackgroundColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(189, 254, 86)'],
+            fill: false,
+        }],
+    };
+
+    new Chart(lineChart1, {
+        type: 'line',
+        data: lineChartData1,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    precision: 0, // Set precision to 0 to display whole numbers on the y-axis
+                },
+            },
+            // Add options if needed
+        },
+    });
+    //new doughnut chart code trial
+
+
+
+  
+    //
+    
+    // This above part is the horizontal bar chart
+    var chrt4 = document.getElementById("chartId4").getContext("2d");
+    var chartId4 = new Chart(chrt4, {
+      type: 'doughnut',
+      data: {
+        labels: ["RAM USED", "UNUSED RAM"],
+        datasets: [{
+          label: "Ram Usage Graph",
+          data: ["{{data.ram_usage}}", "{{data.unused_ram}}"],
+          backgroundColor: ['rgba(255, 99, 133, 0.788)', 'rgba(54, 162, 235, 0.6)'],
+          hoverOffset: 5
+        }],
+      },
+      options: {
+        responsive: false,
+        cutout: 70,
+        legend: {
+          display: false // Hide the legend
+        },
+        plugins: {
+          doughnutLabel: {
+            labels: [
+              {
+                text: "the title",
+                font: {
+                  size: '60'
+                }
+              }
+            ]
+          },
+          legend: {
+            display: false // Hide the legend
+          },
+        },
+        elements: {
+          arc: {
+            borderWidth: 0, // Set the border width to 0 to hide it
+          },
+        },
+        shadowColor: 'rgba(0, 0, 0, 0.9)', // Shadow color
+        shadowBlur: 10, // Shadow blur radius
+        shadowOffsetX: 5, // Shadow horizontal offset
+        shadowOffsetY: 5, // Shadow vertical offset
+      },
+    });
+    
+
+    var chrt1 = document.getElementById("chartId").getContext("2d");
+    var chartId1 = new Chart(chrt1, {
+      type: 'doughnut',
+      data: {
+        labels: ["RAM USED", "UNUSED RAM"],
+        datasets: [{
+          label: "Ram Usage Graph",
+          data: ["{{data.ram_usage}}", "{{data.unused_ram}}"],
+          backgroundColor: ['rgba(255, 99, 133, 0.788)', 'rgba(54, 162, 235, 0.6)'],
+          hoverOffset: 5
+        }],
+      },
+      options: {
+        responsive: false,
+        cutout: 70,
+        legend: {
+          display: false // Hide the legend
+        },
+        plugins: {
+          doughnutLabel :{
+            labels : [
+            {
+              text : "the title",
+              font :{
+                size : '60'
+              }
+            }
+            ]
+          },
+          legend: {
+            display: false     // Hide the legend
+          },
+        },
+        
+      },
+    });
+    
+
+    var chrt2 = document.getElementById("chartId1").getContext("2d");
+    var data = {
+      labels: ["DISK USED", "EMPTY DISK"],
+      datasets: [{
+        label: "Disk Usage Graph",
+        data: ["{{data.disk_info}}", "{{data.diskempty}}"],
+        backgroundColor: ['lightblue', '#E36414'],
+        hoverOffset: 5
+      }],
+    };
+    
+    var chartId2 = new Chart(chrt2, {
+      type: 'doughnut',
+      data: data,
+      options: {
+        responsive: false,
+        cutout: 70,
+        plugins: {
+          legend: {
+            display: false // Hide the legend
+          },
+        },
+      },
+    });
+    
+    var chrt3 = document.getElementById("chartId2").getContext("2d");
+    var chartId2 = new Chart(chrt3, {
+      type: 'doughnut',
+      data: {
+        labels: [ "Total Incidents","Live Incident"],
+        datasets: [{
+          label: "Ram Usage Graph",
+          data: [5, 1],
+          backgroundColor: ['yellow', 'aqua'],
+          hoverOffset: 5
+        }],
+      },
+      options: {
+        responsive: false,
+        cutout: 70,
+        plugins:{
+          legend: {
+            display: false // Hide the legend
+          },
+        }
+        
+      },
+    });
+    
+  </script>
+</body>
+
+{% endblock content %}

@@ -612,6 +612,39 @@ def firewall_list(request):
 
     return render(request, 'firewall_list.html', {'firewalls': firewalls})
 
+## firewall manager views
+def firewall_list1(request):
+    firewalls = Firewall.objects.all()
+
+    if 'export_excel' in request.GET:
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="firewalls.xls"'
+
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Firewalls')
+
+        # Write headers
+        row_num = 0
+        columns = ['Name', 'IP', 'Port', 'Location', 'Description', 'Link']
+        for col_num, column_title in enumerate(columns):
+            ws.write(row_num, col_num, column_title)
+
+        # Write data
+        for firewall in firewalls:
+            row_num += 1
+            ws.write(row_num, 0, firewall.name)
+            ws.write(row_num, 1, firewall.ip)
+            ws.write(row_num, 2, firewall.port)
+            ws.write(row_num, 3, firewall.location)
+            ws.write(row_num, 4, firewall.description)
+            ws.write(row_num, 5, firewall.link)
+
+        wb.save(response)
+        return response
+
+    return render(request, 'firewall_list1.html', {'firewalls': firewalls})
+## manager ends for firewall
+
 # views.py
 from django.shortcuts import render, redirect
 from .forms import FirewallForm
@@ -637,8 +670,42 @@ def firewall_create(request):
 
     return render(request, 'firewall_create.html', {'form': form})
 
+## manager creation 
+def firewall_create1(request):
+    if request.method == 'POST':
+        form = FirewallForm(request.POST)
+        if form.is_valid():
+            # Get the form data
+            firewall_instance = form.save(commit=False)
+
+            # Generate the link using the provided logic
+            firewall_instance.link = f"https://{firewall_instance.ip}:{firewall_instance.port}"
+
+            # Save the updated instance to the database
+            firewall_instance.save()
+
+            return redirect('firewall_list')
+
+    else:
+        form = FirewallForm()
+
+    return render(request, 'firewall_create1.html', {'form': form})
+
 
 def firewall_edit(request, pk):
+    firewall = get_object_or_404(Firewall, pk=pk)
+
+    if request.method == 'POST':
+        form = FirewallForm(request.POST, instance=firewall)
+        if form.is_valid():
+            form.save()
+            return redirect('firewall_list')
+    else:
+        form = FirewallForm(instance=firewall)
+
+    return render(request, 'firewall_edit.html', {'form': form, 'firewall': firewall})
+##manager edit
+def firewall_edit1(request, pk):
     firewall = get_object_or_404(Firewall, pk=pk)
 
     if request.method == 'POST':
@@ -659,6 +726,16 @@ def firewall_delete(request, pk):
         return redirect('firewall_list')
 
     return render(request, 'firewall_delete.html', {'firewall': firewall})
+
+##manager delete 
+def firewall_delete1(request, pk):
+    firewall = get_object_or_404(Firewall, pk=pk)
+    
+    if request.method == 'POST':
+        firewall.delete()
+        return redirect('firewall_list')
+
+    return render(request, 'firewall_delete1.html', {'firewall': firewall})
 
 ####
 
@@ -736,4 +813,52 @@ def router_detail(request, Name):
     system_status = get_object_or_404(Router, Name=Name)
     system_status.link = f"http://{system_status.IP_address}:{system_status.port}"
     return render(request, 'router_detail.html', {'system_status': system_status})
+
+###login trial 
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+
+@login_required
+def dashboard(request):
+    if request.user.is_superuser:
+        return redirect('dashboard_main')
+    else:
+        print(f"User is not a superuser. User: {request.user.username}")
+        return render(request, 'dashboard1.html')
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            
+            # Check the username and redirect accordingly
+            if user.username == 'firewall_manager':
+                return redirect('firewall_list1')  # Redirect to firewall dashboard
+            else:
+                return redirect('dashboard')  # Redirect to the default dashboard
+            
+        else:
+            messages.error(request, 'Invalid login credentials. Please try again.') 
+
+    return render(request, 'login.html')
+
+
+
+### logout
+from django.contrib.auth import logout
+def logout_view(request):
+    logout(request)
+    return redirect('login')  # Redirect to the login page
+
 

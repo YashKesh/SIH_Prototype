@@ -1,0 +1,179 @@
+<!-- firewall_list.html -->
+<!-- firewall_list.html -->
+{% extends 'main1.html' %} 
+{% block content %}
+    {% load static %}
+    <title>Firewall List</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+          }
+          .dashhead{
+            margin-top: 0.5%;
+            background-color: #4B49AC;
+            color: #ffff;
+            padding: 2rem;
+            border-radius: 1rem 1rem 0rem 0rem;
+            font-family: 'Roboto', sans-serif;
+            }
+          .main{
+            background-color: #dde3fd;
+            height: 100vh;
+            margin-left: 1%;
+          }
+          h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #91c8e4;
+            color: #fff;
+            margin: 0;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+          }
+    
+          table {
+            border-collapse: collapse;
+            width: 100%;
+            
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 0px;
+          }
+    
+          th,
+          td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            border-radius: 5px;
+          }
+    
+          th {
+            background-color: #4B49AC;
+            color: #ffff;
+          }
+    
+          tr:nth-child(even) {
+            background-color: #f2f2f2;
+          }
+    
+          tr:hover {
+            background-color: #ddd;
+          }
+          .content{
+            margin-left: 1%;
+            margin-top: 1%;
+          }
+          @media (max-width: 600px) {
+            table {
+              width: 100%;
+            }
+            th,
+            td {
+              padding: 8px;
+            }
+          }
+      a.button-edit,
+      a.button-delete {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 4px;/* Blue color for Edit and Delete buttons */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        font-size: medium;
+      }
+      a.button-edit{
+        background-color: rgb(27, 151, 27);
+        border: 1px solid rgb(27, 151, 27);
+      }
+      a.button-delete {
+        background-color: rgb(217, 50, 50);
+        border: 1px solid rgba(214, 0, 0, 0.301);
+      }
+      a.button-edit:hover
+      {
+        background-color: rgb(0, 134, 0); /* Darker blue on hover */
+        border:1px solid rgb(0, 134, 0);
+      }
+      a.button-delete:hover{
+        background-color: rgb(154, 3, 3); /* Darker blue on hover */
+        border:1px solid rgb(154, 3, 3);
+      }
+      .extrabtn{
+        margin-bottom: 1%;
+        margin-top: 1%;
+      }
+      .extrabtn a{
+        font-size: large;
+        background-color: rgb(27, 151, 27);
+        border: 1px solid white;
+        margin-right: 1%;
+      }
+      .extrabtn button{
+        font-size: large;
+      }
+    </style>
+  <body>
+    <div class="main overflow-auto">
+        <div class="content">
+        <div class="h3 dashhead fs-30 ">Firewall List</div>
+        <div class="extrabtn">
+            <a href="{% url 'firewall_create1' %}" class="btn btn-primary firewall">Add Firewall</a>
+            <a href="{% url 'firewall_list1' %}?export_excel=1">
+              <button class="btn btn-primary">Export in Excel</button>
+            </a>
+        </div>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>IP</th>
+          <th>Port</th>
+          <th>Location</th>
+          <th>Description</th>
+          <th>Link</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for firewall in firewalls %}
+        <tr>
+          <td>{{ firewall.name }}</td>
+          <td>{{ firewall.ip }}</td>
+          <td>{{ firewall.port }}</td>
+          <td>{{ firewall.location }}</td>
+          <td>{{ firewall.description }}</td>
+          <td>
+            <button
+              class="button-login button-edit btn btn-primary"
+              onclick="window.open('{{ firewall.link }}', '_blank')"
+            >
+              Login
+            </button>
+          </td>
+          <td>
+            <a
+              href="{% url 'firewall_edit1' pk=firewall.pk %}"
+              class="button-edit btn btn-primary"
+              >Edit</a
+            >
+          </td>
+          <td>
+            <a
+              href="{% url 'firewall_delete1' pk=firewall.pk %}"
+              class="button-delete btn btn-primary"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div></div>
+  </body>
+{% endblock content %}

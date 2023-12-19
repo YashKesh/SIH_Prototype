@@ -301,53 +301,6 @@
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'dashboard_main' %}">
-              <i class="icon-grid menu-icon"></i>
-              <span class="menu-title">Dashboard</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse"  href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <i class="icon-layout menu-icon"></i>
-              <span class="menu-title">System Data</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="ui-basic">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{% url 'sysinformation' %}">User System</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'installed_apps' %}">Installed apps</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link"   data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
-              <i class="icon-columns menu-icon"></i>
-              <span class="menu-title">Windows license</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="form-elements">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"><a class="nav-link" href="{% url 'windowslic' %}">System License</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'license_data' %}">Inventory</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'custom_license' %}">Upload license Info</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'custom_license_update' %}">Custom License data</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link"  href="#devices"  data-toggle="collapse"  aria-expanded="false" aria-controls="tables">
-              <i class="icon-bar-graph menu-icon"></i>
-              <span class="menu-title">Physical Servers</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="devices">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{% url 'system_status_view' %}">Windows Servers</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'monitoring_data' %}">Linux Servers</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
               <i class="icon-grid-2 menu-icon"></i>
               <span class="menu-title">Firewalls</span>
@@ -356,16 +309,9 @@
             <div class="collapse" id="tables">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{% url 'firewall_create' %}">Create Custom</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'firewall_list' %}">Firewall List</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'firewall_list1' %}">Firewall List</a></li>
               </ul>
             </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link"  href="{% url 'router' %}" >
-              <i class="icon-contract menu-icon"></i>
-              <span class="menu-title">Router Management</span>
-              
-            </a>
           </li>
         </ul>
       </nav>

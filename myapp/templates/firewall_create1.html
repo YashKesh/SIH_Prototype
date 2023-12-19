@@ -1,0 +1,108 @@
+<!-- firewall_create.html -->
+{% extends 'main1.html' %} {% block content %}
+  <head>
+    <title>Create Firewall</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+          }
+          .dashhead{
+            margin-top: 0.5%;
+            background-color: #4B49AC;
+            color: #ffff;
+            padding:1rem;
+            border-radius: 1rem 1rem 0rem 0rem;
+            font-family: 'Roboto', sans-serif;
+            }
+          .main{
+            background-color: #dde3fd;
+            height: 100vh;
+            margin-left: 1%;
+          }
+          h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #91c8e4;
+            color: #fff;
+            margin: 0;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+          }
+    
+      body {
+        font-family: "Roboto", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #dde3fd; /* Match the background color of .main */
+      }
+      form {
+        max-width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+      }
+      label {
+        display: block;
+        margin-bottom: 2%;
+        font-size: large;
+        font-weight: 800;
+        color: #4B49AC;
+      }
+      input{
+        width: 100%;
+        border:  1px solid #4b49acbe;
+        border-radius: 1rem;
+        padding: 10px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        font-family: "Roboto", sans-serif;
+        font-size: large;
+        color: #4B49AC;
+        font-weight: 400;
+
+      }
+      button {
+        margin-left: auto;
+        margin-right: auto; /* Blue color for submit action */
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      textarea{
+        width: 100%;
+        border-radius: 1rem;
+        border: 1px solid #4b49acbe;
+        padding: 1rem;
+        font-size: large;
+        font-family: "Roboto", sans-serif;
+        font-size: large;
+        color: #4B49AC;
+        font-weight: 400;
+
+      }
+      .btn{
+        font-size: 2rem;
+        width: 100%;
+        margin-top: 1%;
+        font-size: 1rem;
+        
+       }
+    </style>
+  </head>
+  <body>
+    <div class="main overflow-auto">
+    <div class="content">
+    <div class="h3 dashhead fs-30 ">Create Firewall</div>
+    <form method="post" action="{% url 'firewall_create1' %}">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    </div></div>
+  </body>
+{% endblock content %}
