@@ -110,6 +110,25 @@ h4{
 .card-dark-blue{
   width: 20%;
 }
+.infocard{
+  width: 30%;
+  justify-content: space-around;
+}
+.third{
+  display: flex;
+  justify-content: space-around;
+}
+.second{
+  justify-content: space-around;
+}
+.online-devices{
+  background-color: #65B741;
+  color: white;
+}
+.offline-devices{
+  background-color: #E36414;
+  color: white;
+}
 </style>
 
 <head>
@@ -168,9 +187,39 @@ h4{
       </div>
     </div>
   </div>
+  <!-- The new row -->
+  <div class="row third">
+    <div class=" mb-4 stretch-card transparent infocard">
+      <div class="card online-devices">
+        <div class="card-body">
+          <p class="mb-4">Total Number of Online Devices</p>
+          <p class="fs-30 mb-2">{{data.total_online}}</p>
+          <p>Both windows and linux</p>
+        </div>
+      </div>
+    </div>
+    <div class=" mb-4 stretch-card transparent infocard">
+      <div class="card  offline-devices">
+        <div class="card-body">
+          <p class="mb-4">Number of Offline Devices Devices</p>
+          <p class="fs-30 mb-2">{{data.total_offline}}</p>
+          <p>Both windows and linux</p>
+        </div>
+      </div>
+    </div>
+    <div class="mb-4 stretch-card transparent infocard">
+      <div class="card card-dark-blue">
+        <div class="card-body">
+          <p class="mb-4">Number of Mac Devices</p>
+          <p class="fs-30 mb-2">{{data.total_monitoring_data_entries}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- The end of new row -->
   <!-- The third row in between  -->
   <div class="row third">
-    <div class="col-md-6 mb-4 stretch-card transparent">
+    <div class=" mb-4 stretch-card transparent infocard">
       <div class="card card-dark-blue">
         <div class="card-body">
           <p class="mb-4">Total Number of Devices</p>
@@ -179,7 +228,7 @@ h4{
         </div>
       </div>
     </div>
-    <div class="col-md-6 mb-4 stretch-card transparent">
+    <div class=" mb-4 stretch-card transparent infocard">
       <div class="card card-dark-blue">
         <div class="card-body">
           <p class="mb-4">Number of Windows Devices</p>
@@ -187,7 +236,7 @@ h4{
         </div>
       </div>
     </div>
-    <div class="col-md-6 mb-4 stretch-card transparent">
+    <div class="mb-4 stretch-card transparent infocard">
       <div class="card card-dark-blue">
         <div class="card-body">
           <p class="mb-4">Number of Linux Devices</p>
@@ -200,8 +249,8 @@ h4{
   <div class="row second">
     <div class="card security barchart second-chart">
       <div class="card-body ">
-        <h4 class="card-title">Security State</h4>
-        <canvas class="barchart" id="myChart" width="200" height="120"></canvas>
+        <h4 class="card-title">Linux Server Conditions</h4>
+           <canvas id="lineChart1"></canvas>
         <!-- This is also static for now -->
       </div>
     </div>
@@ -256,55 +305,45 @@ h4{
             // Add options if needed
         },
     });
+    //end off first line chart 
+    //start of the first line chart
+    var DevicesGreaterThan80 = "{{ data.devices_greater_than_80 }}";
+    var DevicesBetween50And80 = "{{ data.devices_between_50_and_80 }}";
+    var DevicesLessThan50 = "{{ data.devices_less_than_50 }}";
+    const lineChart1 = document.getElementById('lineChart1').getContext('2d');
+    const lineChartData1 = {
+        labels: ['Critical', 'High', 'Clear'],
+        datasets: [{
+            label: 'Count of Servers',
+            data: [DevicesGreaterThan80, DevicesBetween50And80, DevicesLessThan50], // Replace with your dynamic data
+            backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(255, 159, 64, 0.6)', 'rgba(189, 254, 86, 0.6)'],
+            borderColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(189, 254, 86)'],
+            borderWidth: 1,
+            pointBackgroundColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(189, 254, 86)'],
+            fill: false,
+        }],
+    };
+
+    new Chart(lineChart1, {
+        type: 'line',
+        data: lineChartData1,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    precision: 0, // Set precision to 0 to display whole numbers on the y-axis
+                },
+            },
+            // Add options if needed
+        },
+    });
     //new doughnut chart code trial
 
 
 
   
     //
-    const barchart = document.getElementById('myChart').getContext('2d');
-    const chart = new Chart(barchart, {
-      type: 'bar',
-      data: {
-        labels: ['Antispyware', 'Antivirus', 'Auto-Update',"Firewall","Internet"],
-        datasets: [{
-          label: 'States',
-          data: [100, 89, 75,45,95],
-          backgroundColor: [
-          'rgba(255, 99, 132, 0.6)', // Change the color of the first bar
-          'rgba(255, 159, 64, 0.6)', // Change the color of the second bar
-          'rgba(189, 254, 86, 0.6)', // Change the color of the third bar
-          'rgba(234, 254, 86, 0.6)',
-          'rgba(175, 200, 86, 0.6)',
-          ],
-        borderColor: [
-          'rgb(255, 99, 132)',
-          'rgb(255, 159, 64)',
-          'rgb(189, 254, 86)',
-          'rgba(189, 254, 86)',
-          'rgba(175, 200, 86)',
-        ],
-        borderWidth: 1
-        }],
-      },
-      options: {
-        indexAxis: 'y', // <-- here
-        responsive: true,
-        plugins:{
-          legend: {
-            display: false // Hide the legend
-          },
-        },
-        scales: {
-          x: {
-            grid: {
-              display: false // Hide the x-axis grid lines
-            },
-          },
-          
-        }
-      }
-    });
+    
     // This above part is the horizontal bar chart
     var chrt4 = document.getElementById("chartId4").getContext("2d");
     var chartId4 = new Chart(chrt4, {
@@ -396,7 +435,7 @@ h4{
       datasets: [{
         label: "Disk Usage Graph",
         data: ["{{data.disk_info}}", "{{data.diskempty}}"],
-        backgroundColor: ['lightblue', 'lightgreen'],
+        backgroundColor: ['lightblue', '#E36414'],
         hoverOffset: 5
       }],
     };

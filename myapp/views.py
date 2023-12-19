@@ -196,10 +196,24 @@ def dashboard_system_info(request):
 # RAM usage less than or equal to 50
     num_devices_ram_less_than_50 = SystemStatus.objects.filter(ram_usage__lte=50).count()
     total_system_status_entries = SystemStatus.objects.count()
+    devices_greater_than_80 = MonitoringData.objects.filter(ram_usage__gt=80).count()
 
+# Total number of devices with RAM less than 80 and greater than 50
+    devices_between_50_and_80 = MonitoringData.objects.filter(ram_usage__lt=80, ram_usage__gt=50).count()
+
+    # Total number of devices with RAM less than 50
+    devices_less_than_50 = MonitoringData.objects.filter(ram_usage__lt=50).count()
+    one_hour_ago = timezone.now() - timezone.timedelta(hours=1)
+
+# Get the number of devices online (timestamp less than 1 hour ago)
+    windows_devices_online = SystemStatus.objects.filter(timestamp__gte=one_hour_ago).count()
+    linux_devices_online = MonitoringData.objects.filter(timestamp__gte=one_hour_ago).count()
+    total_online = windows_devices_online + linux_devices_online
+    
 # Total number of entries in MonitoringData model
     total_monitoring_data_entries = MonitoringData.objects.count()
     total_devices = total_system_status_entries + total_monitoring_data_entries
+    total_offline =   total_devices - total_online
     combined_data = {
         **system_data,
         **additional_data,
@@ -209,7 +223,14 @@ def dashboard_system_info(request):
         'num_devices_ram_less_than_50': num_devices_ram_less_than_50,
         'total_system_status_entries' : total_system_status_entries,
         'total_monitoring_data_entries' : total_monitoring_data_entries,
-        'total_devices':total_devices
+        'total_devices':total_devices,
+        'devices_greater_than_80':devices_greater_than_80,
+        'devices_between_50_and_80':devices_between_50_and_80,
+        'devices_less_than_50':devices_less_than_50,
+        'windows_devices_online':windows_devices_online,
+        'linux_devices_online':linux_devices_online,
+        'total_online':total_online,
+        'total_offline':total_offline
     }
     return render(request, 'dashboard.html', {'data': combined_data})
 
