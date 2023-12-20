@@ -125,3 +125,30 @@ class Router(models.Model):
     
     
 ### end of router db ###
+
+## for the entry of the log based files
+# models.py
+
+from django.db import models
+
+class LogEntry(models.Model):
+    timestamp = models.DateTimeField()
+    source_ip = models.GenericIPAddressField()
+    destination_ip = models.GenericIPAddressField()
+    response_time = models.FloatField()
+    http_status_code = models.PositiveIntegerField()
+    http_method = models.CharField(max_length=10)
+    url = models.TextField()
+    user_agent = models.TextField()
+    elb_arn = models.CharField(max_length=255)
+    backend_status_code = models.PositiveIntegerField()
+    backend_ip_port = models.CharField(max_length=20)
+    
+    # Additional fields based on your specific needs
+    # request_size = models.PositiveIntegerField()
+    # response_size = models.PositiveIntegerField()
+    # user_identity = models.CharField(max_length=255)
+    
+    def __str__(self):
+        return f"{self.timestamp} - {self.http_method} {self.url}"
+

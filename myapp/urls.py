@@ -49,4 +49,5 @@ urlpatterns = [
      path('router_detail/<str:Name>/', views.router_detail, name='router_detail'),
       path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'), 
+    path('upload_and_display_log/', views.upload_and_display_log, name='upload_and_display_log'),
 ]

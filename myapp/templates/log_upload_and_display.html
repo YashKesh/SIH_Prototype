@@ -1,0 +1,51 @@
+{% extends 'main.html' %}
+{% block content %}
+<!-- log_upload_and_display.html -->
+
+<h2>Upload Log and Display Log</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">Upload Log</button>
+</form>
+
+<h3>Log Entries</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Timestamp</th>
+            <th>Source IP</th>
+            <th>Destination IP</th>
+            <th>Response Time</th>
+            <th>HTTP Status Code</th>
+            <th>HTTP Method</th>
+            <th>URL</th>
+            <th>User Agent</th>
+            <th>ELB ARN</th>
+            <th>Backend Status Code</th>
+            <th>Backend IP Port</th>
+            <!-- Add more headers as needed -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for log_entry in log_entries %}
+            <tr>
+                <td>{{ log_entry.timestamp }}</td>
+                <td>{{ log_entry.source_ip }}</td>
+                <td>{{ log_entry.destination_ip }}</td>
+                <td>{{ log_entry.response_time }}</td>
+                <td>{{ log_entry.http_status_code }}</td>
+                <td>{{ log_entry.http_method }}</td>
+                <td>{{ log_entry.url }}</td>
+                <td>{{ log_entry.user_agent }}</td>
+                <td>{{ log_entry.elb_arn }}</td>
+                <td>{{ log_entry.backend_status_code }}</td>
+                <td>{{ log_entry.backend_ip_port }}</td>
+                <!-- Add more fields as needed -->
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}

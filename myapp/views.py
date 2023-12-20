@@ -862,3 +862,82 @@ def logout_view(request):
     return redirect('login')  # Redirect to the login page
 
 
+##log upload and display
+# views.py
+import csv
+import re
+from django.shortcuts import render, redirect
+from .forms import LogUploadForm
+from .models import LogEntry
+from io import TextIOWrapper
+
+def upload_and_display_log(request):
+    log_entries = LogEntry.objects.all()
+
+    if request.method == 'POST':
+        form = LogUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_log(request.FILES['log_file'])
+            return redirect('upload_and_display_log')
+    else:
+        form = LogUploadForm()
+
+    return render(request, 'log_upload_and_display.html', {'form': form, 'log_entries': log_entries})
+
+def handle_uploaded_log(file):
+    decoded_file = TextIOWrapper(file, encoding='utf-8')
+    csv_reader = csv.reader(decoded_file)
+
+    for row in csv_reader:
+        if len(row) == 2:
+            log_data = parse_log_entry(row[0], row[1])
+
+            if log_data:
+                log_entry = LogEntry.objects.create(**log_data)
+                log_entry.save()
+
+def parse_log_entry(first_column, second_column):
+    try:
+        # Regular expression to extract information from the first column
+        first_column_pattern = re.compile(r'(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z)\s+(?P<ip_address>[0-9.:]+)\s+(?P<response_time>\d+\.\d+)\s+(?P<http_status_code>\d+)')
+        first_column_match = first_column_pattern.search(first_column)
+
+        if not first_column_match:
+            return None
+
+        # Extracted information from the first column
+        timestamp = first_column_match.group('timestamp')
+        source_ip = first_column_match.group('ip_address')
+        response_time = float(first_column_match.group('response_time'))
+        http_status_code = int(first_column_match.group('http_status_code'))
+
+        # Extracted information from the second column
+        second_column_pattern = re.compile(r'"(?P<http_method>\w+) (?P<url>[^"]+)" "(?P<user_agent>[^"]+)"')
+        second_column_match = second_column_pattern.search(second_column)
+
+        if not second_column_match:
+            return None
+
+        http_method = second_column_match.group('http_method')
+        url = second_column_match.group('url')
+        user_agent = second_column_match.group('user_agent')
+
+        # Create a dictionary to store the parsed data
+        log_data = {
+            'timestamp': timestamp,
+            'source_ip': source_ip,
+            'response_time': response_time,
+            'http_status_code': http_status_code,
+            'http_method': http_method,
+            'url': url,
+            'user_agent': user_agent,
+            # Add more fields as needed
+        }
+
+        return log_data
+
+    except Exception as e:
+        print(f"Error parsing log entry: {e}")
+        return None
+
+
