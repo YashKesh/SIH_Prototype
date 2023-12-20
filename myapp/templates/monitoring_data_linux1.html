@@ -1,0 +1,136 @@
+{% extends 'main2.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monitoring Data</title>
+    <style>
+        body {
+          font-family: 'Roboto', sans-serif;
+          margin: 0;
+          padding: 0;
+        }
+        .dashhead{
+          margin-top: 0.5%;
+          background-color: #4B49AC;
+          color: #ffff;
+          padding: 2rem;
+          border-radius: 1rem 1rem 0rem 0rem;
+          font-family: 'Roboto', sans-serif;
+          }
+        .main{
+          background-color: #dde3fd;
+          height: 100vh;
+          margin-left: 1%;
+        }
+        h1 {
+          text-align: center;
+          padding: 20px;
+          background-color: #91c8e4;
+          color: #fff;
+          margin: 0;
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+        }
+  
+        table {
+          border-collapse: collapse;
+          width: 100%;
+          
+          background-color: #fff;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+          border-radius: 0px;
+        }
+  
+        th,
+        td {
+          border: 1px solid #ddd;
+          padding: 12px;
+          text-align: left;
+          border-radius: 5px;
+        }
+  
+        th {
+          background-color: #4B49AC;
+          color: #ffff;
+        }
+  
+        tr:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+  
+        tr:hover {
+          background-color: #ddd;
+        }
+        .content{
+          margin-left: 1%;
+          margin-top: 1%;
+        }
+        @media (max-width: 600px) {
+          table {
+            width: 100%;
+          }
+          th,
+          td {
+            padding: 8px;
+          }
+        }
+        .enabled { color: green;
+          font-weight: 800;
+      }
+      .disabled { color: red;
+          font-weight: 800;
+       }
+       .condition{
+        margin-left: 2%;
+       }
+      </style>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha384-rGSIiXS0gO5rJ8QC1mg9zcvlSBTIH6U3Er3gVmMx4P2Dw5VdkNyZEA2u3XcFQSTB" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <!-- Other head elements -->
+</head>
+<body>
+    <div class="main overflow-auto">
+    <div class="content">
+    <div class="h3 dashhead fs-30 ">Linux System Monitoring</div>
+    <table border="1">
+        <tr>
+            <th>Mac ID</th>
+            <th>IP Address</th>
+            <th>Host Name</th>
+            <th>Linux Distribution</th>
+            <th>Status</th>
+            <th>Condition</th>
+            
+            
+        </tr>
+        {% for data in monitoring_data_objects %}
+        <tr>
+            <td><a href="{% url 'linux_detail1' data.mac_id %}">{{ data.mac_id }}</a></td>
+            <td>{{ data.ip_address }}</td>
+            <td>{{ data.host_name }}</td>
+            <td>{{ data.linux_distribution }}</td>
+            <td class="{% if data.status == 'Online' %}enabled{% else %}disabled{% endif %}">{{data.status}}</td>
+            <td>
+                {% if data.condition == 'Critical' %}
+                    <i class="fas fa-times" style="color: red;"></i> <span class="condition">{{ data.condition }}</span>  <!-- Cross icon in red -->
+                {% elif data.condition == 'High' %}
+                    <i class="fas fa-exclamation" style="color: rgb(198, 198, 1);"></i> <span class="condition">{{ data.condition }}</span> <!-- Exclamation icon in yellow -->
+                {% elif data.condition == 'Clear' %}
+                    <i class="fas fa-check" style="color: green;"></i><span class="condition">{{ data.condition }}</span><!-- Tick mark icon in green -->
+                {% else %}
+                    <!-- Handle other conditions if needed -->
+                    {{ data.condition }}
+                {% endif %}
+              </td>
+            
+            
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" integrity="sha384-pzjw8PPYlTKI4pS3pBx8f/AWTaQDc4m09R3dgzH2RO5lxxk9E6CAwzgPQZKm6MKf" crossorigin="anonymous"></script>
+</body>
+</html>
+{% endblock content %}

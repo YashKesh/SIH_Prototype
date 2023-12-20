@@ -140,6 +140,63 @@ h4{
   <div class="main overflow-auto">
     <div class="header"><h2>Main Dashboard</h2></div>
     <hr class="breaker">
+    <div class="row third">
+      <div class=" mb-4 stretch-card transparent infocard">
+        <div class="card online-devices">
+          <div class="card-body">
+            <p class="mb-4">Total Number of Online Devices</p>
+            <p class="fs-30 mb-2">{{data.total_online}}</p>
+            <p>Both windows and linux</p>
+          </div>
+        </div>
+      </div>
+      <div class=" mb-4 stretch-card transparent infocard">
+        <div class="card  offline-devices">
+          <div class="card-body">
+            <p class="mb-4">Number of Offline Devices Devices</p>
+            <p class="fs-30 mb-2">{{data.total_offline}}</p>
+            <p>Both windows and linux</p>
+          </div>
+        </div>
+      </div>
+      <div class="mb-4 stretch-card transparent infocard">
+        <div class="card card-dark-blue">
+          <div class="card-body">
+            <p class="mb-4">Number of Mac Devices</p>
+            <p class="fs-30 mb-2">{{data.total_monitoring_data_entries}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- The end of new row -->
+    <!-- The third row in between  -->
+    <div class="row third">
+      <div class=" mb-4 stretch-card transparent infocard">
+        <div class="card card-dark-blue">
+          <div class="card-body">
+            <p class="mb-4">Total Number of Devices</p>
+            <p class="fs-30 mb-2">{{data.total_devices}}</p>
+            <p>Both windows and linux</p>
+          </div>
+        </div>
+      </div>
+      <div class=" mb-4 stretch-card transparent infocard">
+        <div class="card card-dark-blue">
+          <div class="card-body">
+            <p class="mb-4">Number of Windows Devices</p>
+            <p class="fs-30 mb-2">{{data.total_system_status_entries}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="mb-4 stretch-card transparent infocard">
+        <div class="card card-dark-blue">
+          <div class="card-body">
+            <p class="mb-4">Number of Linux Devices</p>
+            <p class="fs-30 mb-2">{{data.total_monitoring_data_entries}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row  first doughnut">
     <div class="grid-margin marginleft">
       <div class="card">
@@ -178,73 +235,17 @@ h4{
     <div class="grid-margin marginleft">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Ram Usage</h4>
+          <h4 class="card-title">Average Ram Usage</h4>
           <div class="share">
           <canvas class="canvas-frame" id="chartId4" aria-label="chart" height="200" width="200"></canvas>
-          <span class="information">Ram usage <br class="break"><span class="text-muted data">{{data.ram_usage}}%</span></span>
+          <span class="information">Average ram<br class="break"><span class="text-muted data">{{data.average}}%</span></span>
         </div>
         </div>
       </div>
     </div>
   </div>
   <!-- The new row -->
-  <div class="row third">
-    <div class=" mb-4 stretch-card transparent infocard">
-      <div class="card online-devices">
-        <div class="card-body">
-          <p class="mb-4">Total Number of Online Devices</p>
-          <p class="fs-30 mb-2">{{data.total_online}}</p>
-          <p>Both windows and linux</p>
-        </div>
-      </div>
-    </div>
-    <div class=" mb-4 stretch-card transparent infocard">
-      <div class="card  offline-devices">
-        <div class="card-body">
-          <p class="mb-4">Number of Offline Devices Devices</p>
-          <p class="fs-30 mb-2">{{data.total_offline}}</p>
-          <p>Both windows and linux</p>
-        </div>
-      </div>
-    </div>
-    <div class="mb-4 stretch-card transparent infocard">
-      <div class="card card-dark-blue">
-        <div class="card-body">
-          <p class="mb-4">Number of Mac Devices</p>
-          <p class="fs-30 mb-2">{{data.total_monitoring_data_entries}}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- The end of new row -->
-  <!-- The third row in between  -->
-  <div class="row third">
-    <div class=" mb-4 stretch-card transparent infocard">
-      <div class="card card-dark-blue">
-        <div class="card-body">
-          <p class="mb-4">Total Number of Devices</p>
-          <p class="fs-30 mb-2">{{data.total_devices}}</p>
-          <p>Both windows and linux</p>
-        </div>
-      </div>
-    </div>
-    <div class=" mb-4 stretch-card transparent infocard">
-      <div class="card card-dark-blue">
-        <div class="card-body">
-          <p class="mb-4">Number of Windows Devices</p>
-          <p class="fs-30 mb-2">{{data.total_system_status_entries}}</p>
-        </div>
-      </div>
-    </div>
-    <div class="mb-4 stretch-card transparent infocard">
-      <div class="card card-dark-blue">
-        <div class="card-body">
-          <p class="mb-4">Number of Linux Devices</p>
-          <p class="fs-30 mb-2">{{data.total_monitoring_data_entries}}</p>
-        </div>
-      </div>
-    </div>
-  </div>
+  
   <!-- end of the third row -->
   <div class="row second">
     <div class="card security barchart second-chart">
@@ -345,6 +346,7 @@ h4{
     //
     
     // This above part is the horizontal bar chart
+    var average = "{{data.average}}"
     var chrt4 = document.getElementById("chartId4").getContext("2d");
     var chartId4 = new Chart(chrt4, {
       type: 'doughnut',
@@ -352,8 +354,8 @@ h4{
         labels: ["RAM USED", "UNUSED RAM"],
         datasets: [{
           label: "Ram Usage Graph",
-          data: ["{{data.ram_usage}}", "{{data.unused_ram}}"],
-          backgroundColor: ['rgba(255, 99, 133, 0.788)', 'rgba(54, 162, 235, 0.6)'],
+          data: [average, 100-average],
+          backgroundColor: ['#52D3D8', '#200E3A'],
           hoverOffset: 5
         }],
       },

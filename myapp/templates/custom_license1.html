@@ -1,0 +1,169 @@
+<!-- upload_csv.html -->
+{% extends 'main2.html' %}
+{% block content %}
+<head>
+    <title>Custom License</title>
+</head>
+{% load static %}
+<style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .dashhead{
+      margin-top: 0.5%;
+      background-color: #4B49AC;
+      color: #ffff;
+      padding: 2rem;
+      border-radius: 1rem 1rem 0rem 0rem;
+      font-family: 'Roboto', sans-serif;
+      }
+    .main{
+      background-color: #dde3fd;
+      height: 100vh;
+      margin-left: 1%;
+      font-family: 'Roboto', sans-serif;
+    }
+    h1 {
+      text-align: center;
+      padding: 20px;
+      background-color: #91c8e4;
+      color: #fff;
+      margin: 0;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 1%;
+      background-color: #fff;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 0px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+      border-radius: 5px;
+    }
+
+    th {
+      background-color: #4B49AC;
+      color: #ffff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+    .content{
+      margin-left: 1%;
+      margin-top: 1%;
+    }
+    .subtext{
+        font-size: 1rem;
+        color: #ffff;
+    }
+    .file_input {
+        display: none;
+      }
+  
+      .custom-button {
+        display: inline-block;
+        padding: 10px 15px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        border: 2px solid #4B49AC;
+        color: #4B49AC;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+  
+      .custom-button:hover {
+        background-color: #4B49AC;
+        color: #fff;
+      }
+  
+      /* Style the submit button */
+      button[type="submit"] {
+        margin-left: 1%;
+        display: inline-block;
+        padding: 10px 15px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        background-color: #2ecc71;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+  
+      button[type="submit"]:hover {
+        background-color: #27ae60;
+      }
+      .file-name {
+        margin-top: 1%;
+        font-size: 1rem;
+      }
+    @media (max-width: 600px) {
+      table {
+        width: 100%;
+      }
+      th,
+      td {
+        padding: 8px;
+      }
+    }
+  </style>
+<body>
+    <div class="main overflow-auto">
+    <div class="content">
+    <div class="h3 dashhead fs-30 ">Upload CSV <br><span class="subtext">( The csv should be in the format of <b>Windows Product Key, License Expiration Date, MAC Address, IP Address, Hostname, Windows Version</b> )</span></div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input class="file_input" type="file" name="csv_file" id="fileInput" accept=".csv">
+        <label for="fileInput" class="custom-button">Choose CSV File</label>
+        <!-- Submit button with custom styling -->
+        <button type="submit">Upload</button>
+        <div class="file-name" id="fileName"></div>
+    </form>
+
+    {% if data %}
+        <table>
+            <tr>
+                {% for header in data.0 %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+            {% for row in data|slice:"1:" %}
+                <tr>
+                    {% for value in row %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    </div>
+    </div>
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function() {
+            document.getElementById('fileName').textContent = this.files[0].name;
+          });
+    </script>
+</body>
+{% endblock content %}

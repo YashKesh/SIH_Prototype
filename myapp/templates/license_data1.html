@@ -1,0 +1,132 @@
+{% extends 'main2.html' %} {% block content %}
+<!-- your_app/templates/your_app/license_data.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>License Data</title>
+    <style>
+        body {
+          font-family: 'Roboto', sans-serif;
+          margin: 0;
+          padding: 0;
+        }
+        .dashhead{
+          margin-top: 0.5%;
+          background-color: #4B49AC;
+          color: #ffff;
+          padding: 2rem;
+          border-radius: 1rem 1rem 0rem 0rem;
+          font-family: 'Roboto', sans-serif;
+          }
+        .main{
+          background-color: #dde3fd;
+          height: 100vh;
+          margin-left: 1%;
+        }
+        h1 {
+          text-align: center;
+          padding: 20px;
+          background-color: #91c8e4;
+          color: #fff;
+          margin: 0;
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+        }
+  
+        table {
+          border-collapse: collapse;
+          width: 100%;
+          
+          background-color: #fff;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+          border-radius: 0px;
+        }
+  
+        th,
+        td {
+          border: 1px solid #ddd;
+          padding: 12px;
+          text-align: left;
+          border-radius: 5px;
+        }
+  
+        th {
+          background-color: #4B49AC;
+          color: #ffff;
+        }
+  
+        tr:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+  
+        tr:hover {
+          background-color: #ddd;
+        }
+        .content{
+          margin-left: 1%;
+          margin-top: 1%;
+        }
+        @media (max-width: 600px) {
+          table {
+            width: 100%;
+          }
+          th,
+          td {
+            padding: 8px;
+          }
+        }
+        .enabled { color: green;
+          font-weight: 800;
+      }
+      .disabled { color: red;
+          font-weight: 800;
+       }
+       .btn{
+        margin-top: 1%;
+        font-size: 1rem;
+        display: inline-block;
+        justify-content: center;
+       }
+    </style>
+  </head>
+  <body>
+    <div class="main overflow-auto">
+        <div class="content">
+        <div class="h3 dashhead fs-30 ">License Data</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Windows Product Key</th>
+          <th>License Expiration Date</th>
+          <th>Remaining Days</th>
+          <th>MAC Address</th>
+          <th>IP Address</th>
+          <th>Hostname</th>
+          <th>Windows Version</th>
+        </tr>
+      </thead>
+      <!-- your_app/templates/your_app/license_data.html -->
+      <!-- ... -->
+      <tbody>
+        {% for data in license_data %}
+        <tr>
+          <td>{{ data.product_key }}</td>
+          <td >{{ data.expiration_date }}</td>
+          <td class="{% if data.status == 'Past Due' %}disabled{% else %}enabled  {% endif %}">{{ data.status }}</td>
+          <td>{{ data.mac_address }}</td>
+          <td>{{ data.ip_address }}</td>
+          <td>{{ data.hostname }}</td>
+          <td>{{ data.windows_version }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <!-- ... -->
+    </table>
+    <a href="{% url 'export_csv' %}" class="btn btn-primary">Export CSV</a>
+    </div></div>
+  </body>
+</html>
+{% endblock content %}

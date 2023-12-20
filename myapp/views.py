@@ -209,7 +209,9 @@ def dashboard_system_info(request):
     windows_devices_online = SystemStatus.objects.filter(timestamp__gte=one_hour_ago).count()
     linux_devices_online = MonitoringData.objects.filter(timestamp__gte=one_hour_ago).count()
     total_online = windows_devices_online + linux_devices_online
-    
+    average_ram_usage_windows = SystemStatus.objects.aggregate(avg_ram=Avg('ram_usage'))['avg_ram']
+    average_ram_usage_linux = MonitoringData.objects.aggregate(avg_ram=Avg('ram_usage'))['avg_ram']
+    average = (average_ram_usage_windows + average_ram_usage_linux)//2
 # Total number of entries in MonitoringData model
     total_monitoring_data_entries = MonitoringData.objects.count()
     total_devices = total_system_status_entries + total_monitoring_data_entries
@@ -230,7 +232,8 @@ def dashboard_system_info(request):
         'windows_devices_online':windows_devices_online,
         'linux_devices_online':linux_devices_online,
         'total_online':total_online,
-        'total_offline':total_offline
+        'total_offline':total_offline,
+        'average':average,
     }
     return render(request, 'dashboard.html', {'data': combined_data})
 
@@ -291,6 +294,27 @@ def windows_info(request):
                 "windows_version": windows_info.windows_version,
             }
             return render(request, "windows_lic.html", context)
+        else:
+            raise Exception("Failed to fetch Windows information.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return render(request, "error.html",e)
+    
+##manager access 
+def windows_info1(request):
+    try:
+        windows_info = get_windows_information()
+
+        if windows_info:
+            context = {
+                "product_key": windows_info.product_key,
+                "expiration_date": windows_info.expiration_date,
+                "mac_address": windows_info.mac_address,
+                "ip_address": windows_info.ip_address,
+                "hostname": windows_info.hostname,
+                "windows_version": windows_info.windows_version,
+            }
+            return render(request, "windows_lic1.html", context)
         else:
             raise Exception("Failed to fetch Windows information.")
     except Exception as e:
@@ -388,6 +412,87 @@ def upload_csv(request):
     # Pass data to the template
     context = {'data': data}
     return render(request, 'custom_license.html', context)
+
+
+
+##manager access
+def upload_csv1(request):
+    data = []
+
+    try:
+        if request.method == 'POST' and request.FILES['csv_file']:
+            csv_file = request.FILES['csv_file']
+
+            # Read CSV data
+            decoded_file = csv_file.read().decode('utf-8-sig')
+            reader = csv.reader(io.StringIO(decoded_file))
+
+            # Get the header row
+            header = next(reader, None)
+            data.append(header)
+
+            # Validate header and column count
+            expected_header = ['Windows Product Key', 'License Expiration Date', 'MAC Address', 'IP Address', 'Hostname', 'Windows Version']
+            if header != expected_header:
+                raise ValueError("Invalid CSV header")
+
+            # Define mapping between CSV column names and model field names
+            field_mapping = {
+                'Windows Product Key': 'windows_product_key',
+                'License Expiration Date': 'license_expiration_date',
+                'MAC Address': 'mac_address',
+                'IP Address': 'ip_address',
+                'Hostname': 'hostname',
+                'Windows Version': 'windows_version',
+            }
+
+            for row in reader:
+                # Validate column count
+                if len(row) != len(expected_header):
+                    raise ValueError("Invalid number of columns in CSV row")
+
+                # Create a dictionary with the mapped field names
+                row_data = {field_mapping[column]: value for column, value in zip(header, row)}
+                try:
+                    original_date = row_data['license_expiration_date']
+                    original_date = original_date.replace('Sept', 'Sep')
+                    # Replace the dot after the abbreviated month
+                    original_date = original_date.replace('.', '')
+
+                    # Convert to datetime object
+                    date_object = datetime.strptime(original_date, "%b %d, %Y, %I:%M %p")
+
+                    # Check if the time component is midnight
+                    if date_object.time() == time(0, 0):
+                        # If the time is midnight, set it to 00:00:00
+                        formatted_date = date_object.strftime("%Y-%m-%d 00:00:00")
+                    else:
+                        # If the time is present, use the original time
+                        formatted_date = date_object.strftime("%Y-%m-%d %H:%M:%S")
+                    row_data['license_expiration_date'] = formatted_date
+                except ValueError:
+                    # Handle invalid date format gracefully
+                    row_data['license_expiration_date'] = None
+
+                # Check if the record already exists
+                existing_record = LicenseData.objects.filter(
+                    windows_product_key=row_data['windows_product_key'],
+                    mac_address=row_data['mac_address']
+                ).exists()
+
+                if not existing_record:
+                    # If the combination doesn't exist, insert the data into the database
+                    LicenseData.objects.create(**row_data)
+                    data.append(row)
+
+    except ValueError as e:
+        # Redirect to an error page if there's an issue with the CSV data
+        return HttpResponseServerError(f"Error: {e}")
+        # return render(request, "error.html")
+
+    # Pass data to the template
+    context = {'data': data}
+    return render(request, 'custom_license1.html', context)
 
 # def upload_csv(request):
 #     data = []
@@ -501,6 +606,19 @@ def license_data_view(request):
 
     return render(request, 'license_data.html', {'license_data': license_data})
 
+##manager access
+def license_data_view1(request):
+    license_data = WindowsInformation.objects.all()
+
+    for data in license_data:
+        if data.expiration_date is not None:
+            remaining_days = (data.expiration_date - timezone.now()).days
+            data.status = f"{remaining_days} days remaining" if remaining_days > 0 else "Past Due"
+        else:
+            data.status = "N/A"
+
+    return render(request, 'license_data1.html', {'license_data': license_data})
+
 ### for exporting the data into scv format
 from django.http import HttpResponse
 import csv
@@ -554,8 +672,61 @@ def receive_system_status(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # api data display on the UI
+##logic for the objective function
+def compute_overall_performance(cpu_usage, memory_usage, disk_usage):
+    # Weights for each metric (you can adjust these based on your priorities)
+    cpu_weight = 0.4
+    memory_weight = 0.3
+    disk_weight = 0.3  # Adjusted the weights to sum up to 1.0 without temperature
+
+    # Normalize the metrics to be in the range [0, 1]
+    normalized_cpu = min(cpu_usage / 100, 1.0)
+    normalized_memory = min(memory_usage / 100, 1.0)
+    normalized_disk = min(disk_usage / 100, 1.0)
+
+    # Calculate the overall performance score out of 10
+    overall_performance = (
+        cpu_weight * (1 - normalized_cpu) +
+        memory_weight * (1 - normalized_memory) +
+        disk_weight * (1 - normalized_disk)
+    ) * 10
+
+    return overall_performance
+
+def categorize_performance(overall_performance):
+    # Define inverted thresholds for performance categories
+    critical_threshold = 5.0
+    high_threshold = 3.0
+    medium_threshold = 3.0
+
+    # Categorize based on inverted thresholds
+    if overall_performance <= critical_threshold:
+        return "Critical"
+    elif overall_performance <= high_threshold:
+        return "High"
+    else:
+        return "Clear"
+
+
 from .models import SystemStatus    
 def system_status_view(request):
+    system_status_data = SystemStatus.objects.all()  # You might want to add ordering or filtering here
+    for status in system_status_data:
+        timing = round(( timezone.now() - status.timestamp).total_seconds() / 3600,2)
+        status.last_updated = f"{timing} hours" if timing>1 else "now"
+        status.status = "Online" if timing<1 else "Offline"
+        status.network_usage = f"{round(status.network_usage, 2)} MB"
+        status.defender_value = "Enabled" if status.defender_status else "Disabled"
+        status.firewall_value = "Enabled" if status.firewall_status else "Disabled"
+        status.auto_update  = "Enabled" if status.auto_updates_status else "Disabled"
+        status.performance = compute_overall_performance(status.cpu_usage,status.ram_usage,status.disk_usage)
+        status.condition = categorize_performance(status.performance)
+    return render(request, 'system_status_list.html', {'system_status_data': system_status_data})
+
+
+##manager access
+from .models import SystemStatus    
+def system_status_view1(request):
     system_status_data = SystemStatus.objects.all()  # You might want to add ordering or filtering here
     for status in system_status_data:
         timing = round(( timezone.now() - status.timestamp).total_seconds() / 3600,2)
@@ -571,7 +742,7 @@ def system_status_view(request):
             status.condition = "High"
         else:
             status.condition = "Clear"
-    return render(request, 'system_status_list.html', {'system_status_data': system_status_data})
+    return render(request, 'system_status_list1.html', {'system_status_data': system_status_data})
 
 
 
@@ -751,8 +922,45 @@ def firewall_delete1(request, pk):
 
 from django.shortcuts import render, get_object_or_404
 from .models import SystemStatus, InstalledApp
-
+from django.core.mail import send_mail
 def device_detail(request, mac_address):
+    system_status = get_object_or_404(SystemStatus, mac_address=mac_address)
+    temperature_reading = get_object_or_404(TemperatureReading, mac_address=mac_address)
+
+    # Extract numeric value from the temperature field using regex
+    numeric_temperature = re.search(r'\d+', temperature_reading.temperature)
+    if numeric_temperature:
+        trimmed_temperature = numeric_temperature.group()
+    else:
+        trimmed_temperature = None
+    if trimmed_temperature !=None:
+        trimmed_temperature = int(trimmed_temperature)
+        trimmed_temperature = round(((trimmed_temperature/10)-273.5),2)
+    # Update system_status with trimmed temperature
+    system_status.temperature = trimmed_temperature
+    system_status.defender_value = "Enabled" if system_status.defender_status else "Disabled"
+    system_status.firewall_value = "Enabled" if system_status.firewall_status else "Disabled"
+    system_status.auto_update  = "Enabled" if system_status.auto_updates_status else "Disabled"
+    system_status.performance = compute_overall_performance(system_status.cpu_usage,system_status.ram_usage,system_status.disk_usage)
+    system_status.condition = categorize_performance(system_status.performance)
+    # Query installed apps based on the mac_address
+    installed_apps = InstalledApp.objects.filter(mac_address=mac_address)
+    
+    return render(request, 'device_detail.html', {'system_status': system_status, 'installed_apps': installed_apps})
+from django.conf import settings
+##send theh mail 
+def send_alert_email(mac_address, condition):
+    subject = f"Critical Alert for Device: {mac_address}"
+    message = f"The device with MAC address {mac_address} is in a critical condition: {condition}."
+
+    # Replace the following with your actual email addresses
+    from_email =  settings.EMAIL_HOST_USER 
+    to_email = ["prathampoojari1@gmail.com"]
+
+    # Use the send_mail function to send the email
+    send_mail(subject, message, from_email, to_email)
+##manager access
+def device_detail1(request, mac_address):
     system_status = get_object_or_404(SystemStatus, mac_address=mac_address)
     
     system_status.defender_value = "Enabled" if system_status.defender_status else "Disabled"
@@ -767,9 +975,7 @@ def device_detail(request, mac_address):
     # Query installed apps based on the mac_address
     installed_apps = InstalledApp.objects.filter(mac_address=mac_address)
     
-    return render(request, 'device_detail.html', {'system_status': system_status, 'installed_apps': installed_apps})
-
-
+    return render(request, 'device_detail1.html', {'system_status': system_status, 'installed_apps': installed_apps})
 
 ## linux distribution view 
 from django.shortcuts import render
@@ -796,7 +1002,28 @@ def linux_detail(request, mac_address):
     context = {'monitoring_data': monitoring_data}
     return render(request, 'linux_detail.html', context)
 
+### windows access
 
+def monitoring_data_view1(request):
+    monitoring_data_objects = MonitoringData.objects.all()
+    for status in monitoring_data_objects:
+        timing = round(( timezone.now() - status.timestamp).total_seconds() / 3600,2)
+        status.last_updated = f"{timing} hours" if timing>1 else "now"
+        status.status = "Online" if timing<1 else "Offline"
+        if status.cpu_usage*100 > 80 and status.ram_usage>80:
+            status.condition  = "Critical"
+        elif status.cpu_usage*100>50 and status.ram_usage>50:
+            status.condition = "High"
+        else:
+            status.condition = "Clear"
+    context = {'monitoring_data_objects': monitoring_data_objects}
+    return render(request, 'monitoring_data_linux1.html', context)
+
+
+def linux_detail1(request, mac_address):
+    monitoring_data = MonitoringData.objects.get(mac_id=mac_address)
+    context = {'monitoring_data': monitoring_data}
+    return render(request, 'linux_detail1.html', context)
 ### Router code 
 # views.py
 from django.views.generic import ListView
@@ -844,7 +1071,9 @@ def login_view(request):
             
             # Check the username and redirect accordingly
             if user.username == 'firewall_manager':
-                return redirect('firewall_list1')  # Redirect to firewall dashboard
+                return redirect('firewall_list1')
+            elif user.username == 'windows_manager':        # Redirect to firewall dashboard
+                return redirect('system_status_view1')
             else:
                 return redirect('dashboard')  # Redirect to the default dashboard
             
@@ -940,4 +1169,18 @@ def parse_log_entry(first_column, second_column):
         print(f"Error parsing log entry: {e}")
         return None
 
+###temperarture of the system 
+# views.py in your Django app
+
+from django.shortcuts import render
+from .models import TemperatureReading
+
+def temperature_reading_view(request):
+    # Fetch all temperature readings from the database
+    readings = TemperatureReading.objects.all()
+    # Pass the readings to the template
+    context = {'readings': readings}
+
+    # Render the template with the readings data
+    return render(request, 'temperature_reading_template.html', context)
 

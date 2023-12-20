@@ -1,5 +1,5 @@
 <!-- device_detail.html -->
-{% extends 'main.html' %} 
+{% extends 'main2.html' %} 
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
@@ -182,77 +182,65 @@
             justify-content: space-around;
             margin-top: 5%;
           }
-          
-          .card-light-blue {
-            margin-top: 20px;
-            background-color: #87C4FF;
+          .cardrow{
+            display: flex;
           }
-          
-
-
+          .transparent{
+            width: 50%;
+          }
     </style>
 </head>
 <body>
 <div class="main overflow-auto">
     <div class="content">
-        <div class="h3 dashhead fs-30 ">Device Details</div>
+        <div class="h3 dashhead fs-30 ">Servers Details</div>
 
         <div class="row headings">
             <div class="header" onclick="toggleSection('summary')">Summary</div>
-            <div class="header" onclick="toggleSection('installedApps')">Installed Apps</div>
-            <div class="header" onclick="toggleSection('other')">Other</div>
+            <!-- <div class="header" onclick="toggleSection('installedApps')">Installed Apps</div>
+            <div class="header" onclick="toggleSection('other')">Other</div> -->
         </div>
 
         <div id="summary" class="section active sectionflex">
             <div class="card">
                 <h2>Device Information</h2>
                 <ul>
-                    <li><span class="label">MAC Address:</span> {{ system_status.mac_address }}</li>
-                    <li><span class="label">IP Address:</span> {{ system_status.ip_address }}</li>
-                    <li><span class="label">Hostname:</span> {{ system_status.hostname }}</li>
-                    <li><span class="label">CPU Usage:</span> {{ system_status.cpu_usage|floatformat:"2" }}%</li>
-
-                    <li><span class="label">Ram Usage:</span> {{ system_status.ram_usage }}</li>
-                    <li><span class="label">Defender status:</span> {{ system_status.defender_value }}</li>
-                    <li><span class="label">Firewall status:</span> {{ system_status.firewall_value }}</li>
-                    <li>
-                        {% if status.condition == 'Critical' %}
-                            <i class="fas fa-times" style="color: red;"></i> <span class="label">System Condition:</span> {{ system_status.condition }}  <!-- Cross icon in red -->
-                        {% elif status.condition == 'High' %}
-                            <i class="fas fa-exclamation" style="color: rgb(198, 198, 1);"></i> <span class="label">System Condition:</span> {{ system_status.condition }} <!-- Exclamation icon in yellow -->
-                        {% elif status.condition == 'Clear' %}
-                            <i class="fas fa-check" style="color: green;"></i><span class="label">System Condition:</span> {{ system_status.condition }}<!-- Tick mark icon in green -->
-                        {% else %}
-                            <!-- Handle other conditions if needed -->
-                            <span class="label">System Condition:</span> {{ system_status.condition }}
-                        {% endif %}
-                      </li>
-                      <li><span class="label">Cpu temperature:</span> {{ system_status.temperature }}</li>
+                    <li><span class="label">MAC Address:</span> {{ monitoring_data.mac_id }}</li>
+                    <li><span class="label">IP Address:</span> {{ monitoring_data.ip_address }}</li>
+                    <li><span class="label">Hostname:</span> {{ monitoring_data.linux_distribution }}</li>
+                    <li><span class="label">CPU Usage:</span> {{ monitoring_data.cpu_usage|floatformat:"2" }}%</li>
+                    <li><span class="label">Ram Usage:</span> {{ monitoring_data.ram_usage }}</li>
+                    <li><span class="label">Disk Usage:</span> {{ monitoring_data.disk_usage }}</li>
                     <!-- Include other details as needed -->
                 </ul>
             </div>
             <div class="card">
             <h2>Statistical Info</h2>
-            
+            <div class="row cardrow">
+            <div class="col-md-6 mb-4 mt-3 ml-5 stretch-card transparent" style="width: 2rem;">
+                <div class="card card-dark-blue">
+                  <div class="card-body">
+                    <p class="mb-4">Total Data sent</p>
+                    <p class="fs-30 mb-2">{{monitoring_data.sent_mb|floatformat:"2"}}MB</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-4 mt-3 ml-5 stretch-card transparent">
+                <div class="card card-dark-blue">
+                  <div class="card-body">
+                    <p class="mb-4">Total Data received</p>
+                    <p class="fs-30 mb-2">{{monitoring_data.received_mb|floatformat:"2"}}MB</p>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="graphcard">
                 <div id="container" style="width: 11rem; height: 200px;"></div>
                 <div id="container1" style="width: 11rem; height: 200px;"></div>
             </div>
             <div class="graphcard">
                 <div id="container2" style="width: 11rem; height: 200px;"></div>
-                <div id="container3" style="width: 15rem; height: 200px;">
-                
-                  <div class="stretch-card transparent">
-                    <div class="card card-light-blue"> <!-- Change the class to card-light-blue -->
-                      <div class="card-body">
-                        <p class="mb-4">Total Network Usage</p>
-                        <p class="fs-30 mb-2">{{system_status.network_usage}}MB</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                
-                </div>
+                <div id="container3" style="width: 11rem; height: 200px;"></div>
             </div>
             </div>
             </div>
@@ -260,7 +248,7 @@
         
 
         <!-- Add this section to display installed applications -->
-        <div id="installedApps" class="section apps installedApps">
+        <!-- <div id="installedApps" class="section apps installedApps">
             <div class="content">
             <h2>Installed Devices on this device</h2>
             <div>
@@ -284,12 +272,12 @@
             </table>
             </div>
         </div>
-        </div>
-        <div id="other" class="section">
+        </div> -->
+        <!-- <div id="other" class="section">
             <h2>Other Section</h2>
-            <!-- Add content for Other section -->
+           
 
-        </div>
+        </div> -->
     </div>
 </div>
 
@@ -303,7 +291,7 @@
         }
 
         document.getElementById(sectionId).classList.add('active');
-        document.querySelector([onclick="toggleSection('${sectionId}')]).classList.add('active')"]);
+        document.querySelector(`[onclick="toggleSection('${sectionId}')]`).classList.add('active');
     }
 </script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -337,19 +325,19 @@
 <script>
     //the first graph
     anychart.onDocumentReady(function () {
-      var cpuUsageData = "{{ system_status.cpu_usage}}";  // Retrieve CPU usage from the context
+      var cpuUsageData = "{{ monitoring_data.cpu_usage}}";  // Retrieve CPU usage from the context
 
       // Create pie chart with CPU usage data
       var chart = anychart.pie([
-        ['Used', cpuUsageData],
-        ['Free', 100 - cpuUsageData]
+        ['Used', cpuUsageData*100],
+        ['Free', 100 - cpuUsageData*100]
       ]);
 
       // Create palette
       var palette = anychart.palettes.distinctColors();
       palette.items([
-        { color: '#52D3D8' },
-        { color: '#3887BE' }  // Use a neutral color for the "Free" portion
+        { color: '#7d9db6' },
+        { color: '#EFEFEF' }  // Use a neutral color for the "Free" portion
       ]);
 
       // Set chart radius and innerRadius to control the size of the chart
@@ -363,7 +351,7 @@
       // Set outline settings
       chart
         .outline()
-        .width(0)
+        .width('3%')
         .fill(function () {
           return anychart.color.darken(this.sourceColor, 0.25);
         });
@@ -398,7 +386,7 @@
     /// end of first graph
     ///start of the second graph
     anychart.onDocumentReady(function () {
-        var cpuUsageData = "{{ system_status.ram_usage}}";  // Retrieve CPU usage from the context
+        var cpuUsageData = "{{ monitoring_data.ram_usage}}";  // Retrieve CPU usage from the context
   
         // Create pie chart with CPU usage data
         var chart = anychart.pie([
@@ -409,9 +397,9 @@
         // Create palette
         var palette = anychart.palettes.distinctColors();
         palette.items([
-        { color: '#52D3D8' },
-        { color: '#3887BE' }  // Use a neutral color for the "Free" portion
-      ]);
+          { color: '#A367B1' },
+          { color: '#EFEFEF' }  // Use a neutral color for the "Free" portion
+        ]);
   
         // Set chart radius and innerRadius to control the size of the chart
         chart
@@ -424,7 +412,7 @@
         // Set outline settings
         chart
           .outline()
-          .width(0)
+          .width('3%')
           .fill(function () {
             return anychart.color.darken(this.sourceColor, 0.25);
           });
@@ -459,10 +447,10 @@
       ///end of the second graph
       ///start of the third graph
       anychart.onDocumentReady(function () {
-        var cpuUsageData = "{{ system_status.disk_usage}}";  // Retrieve CPU usage from the context
+        var cpuUsageData = "{{ monitoring_data.disk_usage}}";  // Retrieve CPU usage from the context
   
         // Create pie chart with CPU usage data
-        var chart = anychart.pie([  
+        var chart = anychart.pie([
           ['Used', cpuUsageData],
           ['Free', 100 - cpuUsageData]
         ]);
@@ -470,9 +458,9 @@
         // Create palette
         var palette = anychart.palettes.distinctColors();
         palette.items([
-        { color: '#52D3D8' },
-        { color: '#3887BE' }  // Use a neutral color for the "Free" portion
-      ]);
+          { color: '#B80000' },
+          { color: '#EFEFEF' }  // Use a neutral color for the "Free" portion
+        ]);
   
         // Set chart radius and innerRadius to control the size of the chart
         chart
@@ -485,7 +473,7 @@
         // Set outline settings
         chart
           .outline()
-          .width(0)
+          .width('3%')
           .fill(function () {
             return anychart.color.darken(this.sourceColor, 0.25);
           });
@@ -523,7 +511,7 @@
     // Reload the page every 30 seconds
     setInterval(function() {
       location.reload();
-    }, 300000000);  // 30000 milliseconds = 30 seconds
+    }, 30000);  // 30000 milliseconds = 30 seconds
   </script>
 
 
@@ -531,3 +519,4 @@
 </body>
 </html>
 {% endblock content %}
+

@@ -50,4 +50,15 @@ urlpatterns = [
       path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'), 
     path('upload_and_display_log/', views.upload_and_display_log, name='upload_and_display_log'),
+    
+    
+    
+    ### change of the roles and their path
+     path("windows_license1/",views.windows_info1,name="windowslic1"),
+     path('monitoring-data1/', views.monitoring_data_view1, name='monitoring_data1'),
+    path('linux_detail1/<str:mac_address>/', views.linux_detail1, name='linux_detail1'),
+    path('license_data1/', views.license_data_view1, name='license_data1'),
+    path('custom_license1',views.upload_csv1,name="custom_license1"),
+    path('device_detail1/<str:mac_address>/', views.device_detail1, name='device_detail1'),
+    path('system-status_view1/', views.system_status_view1, name='system_status_view1'),
 ]

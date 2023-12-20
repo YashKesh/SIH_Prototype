@@ -1,5 +1,5 @@
 <!-- device_detail.html -->
-{% extends 'main.html' %} 
+{% extends 'main2.html' %} 
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
@@ -227,7 +227,6 @@
                             <span class="label">System Condition:</span> {{ system_status.condition }}
                         {% endif %}
                       </li>
-                      <li><span class="label">Cpu temperature:</span> {{ system_status.temperature }}</li>
                     <!-- Include other details as needed -->
                 </ul>
             </div>
@@ -523,7 +522,7 @@
     // Reload the page every 30 seconds
     setInterval(function() {
       location.reload();
-    }, 300000000);  // 30000 milliseconds = 30 seconds
+    }, 30000);  // 30000 milliseconds = 30 seconds
   </script>
 
 
