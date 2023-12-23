@@ -198,10 +198,32 @@ h4{
       </div>
     </div>
     <div class="row  first doughnut">
+      <div class="grid-margin marginleft">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Average Ram Usage</h4>
+            <div class="share">
+            <canvas class="canvas-frame" id="chartId4" aria-label="chart" height="200" width="200"></canvas>
+            <span class="information">Average ram<br class="break"><span class="text-muted data">{{data.average}}%</span></span>
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-margin marginleft">
+        <div class="card">
+          <div class="card-body card1">
+            <h4 class="card-title">Average Disk Usage</h4>
+            <div class="share">
+            <canvas class="canvas-frame" id="chartId1" aria-label="chart" height="200" width="200"></canvas>
+            <span class="information disk">Disk Occupied <br><span class="text-muted data">{{data.disk_info}}%</span></span>
+          </div>
+          </div>
+        </div>
+      </div>
     <div class="grid-margin marginleft">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Ram Usage</h4>
+          <h4 class="card-title">Ram Usage Of Server</h4>
           <div class="share">
           <canvas class="canvas-frame" id="chartId" aria-label="chart" height="200" width="200"></canvas>
           <span class="information">Ram usage <br class="break"><span class="text-muted data">{{data.ram_usage}}%</span></span>
@@ -209,40 +231,20 @@ h4{
         </div>
       </div>
     </div>
-    <div class="grid-margin marginleft">
-      <div class="card">
-        <div class="card-body card1">
-          <h4 class="card-title">Disk Usage Information</h4>
-          <div class="share">
-          <canvas class="canvas-frame" id="chartId1" aria-label="chart" height="200" width="200"></canvas>
-          <span class="information disk">Disk Occupied <br><span class="text-muted data">{{data.disk_info}}%</span></span>
-        </div>
-        </div>
-      </div>
-    </div>
+    
     <div class="grid-margin marginleft">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Incidents Report</h4>
+          <h4 class="card-title">Os Partitions</h4>
           <div class="share">
           <canvas class="canvas-frame" id="chartId2" aria-label="chart" height="200" width="200"></canvas>
-          <span class="information disk">Live Incidents <br><span class="text-muted data">1</span></span>   
+          <span class="information disk">Windows <br><span class="text-muted data">{{data.total_system_status_entries}}</span></span>   
            <!--in the above the span the live incident count needs to be displayed for now it is static  -->
           </div>
         </div>
       </div>
     </div>
-    <div class="grid-margin marginleft">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">Average Ram Usage</h4>
-          <div class="share">
-          <canvas class="canvas-frame" id="chartId4" aria-label="chart" height="200" width="200"></canvas>
-          <span class="information">Average ram<br class="break"><span class="text-muted data">{{data.average}}%</span></span>
-        </div>
-        </div>
-      </div>
-    </div>
+    
   </div>
   <!-- The new row -->
   
@@ -355,7 +357,7 @@ h4{
         datasets: [{
           label: "Ram Usage Graph",
           data: [average, 100-average],
-          backgroundColor: ['#52D3D8', '#200E3A'],
+          backgroundColor: ['#B31312', '#9ADE7B'],
           hoverOffset: 5
         }],
       },
@@ -401,7 +403,7 @@ h4{
         datasets: [{
           label: "Ram Usage Graph",
           data: ["{{data.ram_usage}}", "{{data.unused_ram}}"],
-          backgroundColor: ['rgba(255, 99, 133, 0.788)', 'rgba(54, 162, 235, 0.6)'],
+          backgroundColor: ['#B31312', '#9ADE7B'],
           hoverOffset: 5
         }],
       },
@@ -430,14 +432,14 @@ h4{
       },
     });
     
-
+    var averagedisk = "{{data.average_cpu_usage}}"
     var chrt2 = document.getElementById("chartId1").getContext("2d");
     var data = {
       labels: ["DISK USED", "EMPTY DISK"],
       datasets: [{
         label: "Disk Usage Graph",
-        data: ["{{data.disk_info}}", "{{data.diskempty}}"],
-        backgroundColor: ['lightblue', '#E36414'],
+        data: [averagedisk, 100-averagedisk],
+        backgroundColor: ['#BF3131', '#9ADE7B'],
         hoverOffset: 5
       }],
     };
@@ -460,11 +462,11 @@ h4{
     var chartId2 = new Chart(chrt3, {
       type: 'doughnut',
       data: {
-        labels: [ "Total Incidents","Live Incident"],
+        labels: [ "{{data.total_system_status_entries}}","{{data.total_monitoring_data_entries}}"],
         datasets: [{
           label: "Ram Usage Graph",
           data: [5, 1],
-          backgroundColor: ['yellow', 'aqua'],
+          backgroundColor: ['#BF3131', '#9ADE7B'],
           hoverOffset: 5
         }],
       },

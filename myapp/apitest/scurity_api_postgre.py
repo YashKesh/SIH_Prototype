@@ -46,7 +46,7 @@ def is_feature_enabled(command):
         return False
 
 def print_info(label, value):
-    print(f"{label}: {value}")
+    print(f"{label}: {value}") 
 
 def send_data_to_postgres(data):
     try:
