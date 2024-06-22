@@ -211,7 +211,10 @@ def dashboard_system_info(request):
     total_online = windows_devices_online + linux_devices_online
     average_ram_usage_windows = SystemStatus.objects.aggregate(avg_ram=Avg('ram_usage'))['avg_ram']
     average_ram_usage_linux = MonitoringData.objects.aggregate(avg_ram=Avg('ram_usage'))['avg_ram']
-    average = (average_ram_usage_windows + average_ram_usage_linux)//2
+    if average_ram_usage_windows!=None and average_ram_usage_linux!=None:
+        average = (average_ram_usage_windows + average_ram_usage_linux)//2
+    else:
+        average = 0
 # Total number of entries in MonitoringData model
     total_monitoring_data_entries = MonitoringData.objects.count()
     total_devices = total_system_status_entries + total_monitoring_data_entries

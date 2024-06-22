@@ -54,9 +54,9 @@ def send_data_to_postgres(data):
         postgres_params = {
             'dbname': 'railway',
             'user': 'postgres',
-            'password': 'CFEfe2aB5*GecE5gFgbDD53Bd*-124Gc',
-            'host': 'monorail.proxy.rlwy.net',
-            'port': '54739'
+            'password': 'mWxmxUXAsuDTBrCBFRyUWyFdtlzCyQxl',
+            'host': 'roundhouse.proxy.rlwy.net',
+            'port': '11817'
         }
 
         # Establish a connection to the PostgreSQL database
